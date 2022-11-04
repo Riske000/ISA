@@ -15,7 +15,7 @@ public class UserDTO {
     private String email;
     private String name;
     private String surname;
-    private String adrress;
+    private String address;
     private String city;
     private String country;
     private String mobilePhone;
@@ -33,7 +33,7 @@ public class UserDTO {
         dto.setEmail(user.getEmail());
         dto.setName(user.getName());
         dto.setSurname(user.getSurname());
-        dto.setAdrress(user.getAdrress());
+        dto.setAddress(user.getAddress());
         dto.setCity(user.getCity());
         dto.setCity(user.getCity());
         dto.setMobilePhone(user.getMobilePhone());
@@ -50,11 +50,11 @@ public class UserDTO {
     public static User convertBack(UserDTO dto)
     {
         User user = new User();
-        
+
         user.setEmail(dto.getEmail());
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());
-        user.setAdrress(dto.getAdrress());
+        user.setAddress(dto.getAddress());
         user.setCity(dto.getCity());
         user.setCountry(dto.getCountry());
         user.setMobilePhone(dto.getMobilePhone());

@@ -13,7 +13,7 @@ public class User extends Entity{
     private String password;
     private String name;
     private String surname;
-    private String adrress;
+    private String address;
     private String city;
     private String country;
     private String mobilePhone;

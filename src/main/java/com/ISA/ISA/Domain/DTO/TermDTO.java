@@ -33,7 +33,7 @@ public class TermDTO {
 
         term.setDateOfTerm(dto.getDateOfTerm());
         term.setDuration(dto.getDuration());
-        term.setStatusOfTerm(dto.statusOfTerm);
+        term.setStatusOfTerm(dto.getStatusOfTerm());
 
         return term;
     }
