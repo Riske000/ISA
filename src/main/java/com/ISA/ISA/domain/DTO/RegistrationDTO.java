@@ -1,8 +1,8 @@
-package com.ISA.ISA.Domain.DTO;
+package com.ISA.ISA.domain.DTO;
 
-import com.ISA.ISA.Domain.Gender;
-import com.ISA.ISA.Domain.User;
-import com.ISA.ISA.Domain.UserType;
+import com.ISA.ISA.domain.enums.Gender;
+import com.ISA.ISA.domain.User;
+import com.ISA.ISA.domain.enums.UserType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,9 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDTO {
-
+public class RegistrationDTO {
     private String email;
+    private String password;
     private String name;
     private String surname;
     private String address;
@@ -26,11 +26,12 @@ public class UserDTO {
     private UserType userType;
     private int medicalCenterID;
 
-    public static UserDTO convertToDto(User user)
+    public static RegistrationDTO convertToDto(User user)
     {
-        UserDTO dto = new UserDTO();
+        RegistrationDTO dto = new RegistrationDTO();
 
         dto.setEmail(user.getEmail());
+        dto.setPassword(user.getPassword());
         dto.setName(user.getName());
         dto.setSurname(user.getSurname());
         dto.setAddress(user.getAddress());
@@ -47,11 +48,12 @@ public class UserDTO {
         return dto;
     }
 
-    public static User convertBack(UserDTO dto)
+    public static User convertBack(RegistrationDTO dto)
     {
         User user = new User();
 
         user.setEmail(dto.getEmail());
+        user.setPassword(dto.getPassword());
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());
         user.setAddress(dto.getAddress());
@@ -63,7 +65,7 @@ public class UserDTO {
         user.setProfession(dto.getProfession());
         user.setJobDescription(dto.getJobDescription());
         user.setUserType(dto.getUserType());
-        user.setMedicalCenter(null);
+        user.setMedicalCenter(null); // menjaj kada budes imao u repo
 
         return user;
     }

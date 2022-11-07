@@ -1,4 +1,4 @@
-package com.ISA.ISA.Domain;
+package com.ISA.ISA.domain.enums;
 
 public enum Gender {
     Male,

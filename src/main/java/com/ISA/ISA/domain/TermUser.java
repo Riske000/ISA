@@ -1,4 +1,4 @@
-package com.ISA.ISA.Domain;
+package com.ISA.ISA.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +8,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 
-public class Entity {
-    private int id;
+public class TermUser extends Entity{
+
+    private User user;
+    private Term term;
 }

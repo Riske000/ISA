@@ -1,6 +1,6 @@
-package com.ISA.ISA.Domain.DTO;
+package com.ISA.ISA.domain.DTO;
 
-import com.ISA.ISA.Domain.MedicalCenter;
+import com.ISA.ISA.domain.MedicalCenter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

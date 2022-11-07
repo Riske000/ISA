@@ -1,5 +1,6 @@
-package com.ISA.ISA.Domain;
+package com.ISA.ISA.domain;
 
+import com.ISA.ISA.domain.enums.StatusOfTerm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

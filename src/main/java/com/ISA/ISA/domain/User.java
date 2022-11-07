@@ -1,5 +1,7 @@
-package com.ISA.ISA.Domain;
+package com.ISA.ISA.domain;
 
+import com.ISA.ISA.domain.enums.Gender;
+import com.ISA.ISA.domain.enums.UserType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

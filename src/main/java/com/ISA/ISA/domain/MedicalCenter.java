@@ -1,4 +1,4 @@
-package com.ISA.ISA.Domain;
+package com.ISA.ISA.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
