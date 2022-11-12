@@ -7,12 +7,15 @@ import com.ISA.ISA.service.MedicalCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
 
 @RestController
-@RequestMapping("api/loads")
+@RequestMapping("api/medical")
 public class MedicalCenterController {
     @Autowired
     private MedicalCenterService medicalCenterService;
@@ -39,22 +42,22 @@ public class MedicalCenterController {
         return new ResponseEntity<>(medicalCenter, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "{/id}")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> delete(@PathVariable int id){
         medicalCenterService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(path = "{/id}")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<?> findById(@PathVariable int id){
-        MedicalCenter medicalCenter = medicalCenterService.findById(id);
+        Optional<MedicalCenter> medicalCenter = medicalCenterService.findById(id);
 
-        if(medicalCenter == null){
+        if(medicalCenter.isEmpty()){
             return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(medicalCenter, HttpStatus.OK);
+        return new ResponseEntity<>(medicalCenter.get(), HttpStatus.OK);
     }
 
     @GetMapping

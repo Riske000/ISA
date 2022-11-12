@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserDTO {
 
+    private int id;
     private String email;
     private String name;
     private String surname;
@@ -30,6 +31,7 @@ public class UserDTO {
     {
         UserDTO dto = new UserDTO();
 
+        dto.setId(user.getId());
         dto.setEmail(user.getEmail());
         dto.setName(user.getName());
         dto.setSurname(user.getSurname());
@@ -51,6 +53,7 @@ public class UserDTO {
     {
         User user = new User();
 
+        user.setId(dto.getId());
         user.setEmail(dto.getEmail());
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());

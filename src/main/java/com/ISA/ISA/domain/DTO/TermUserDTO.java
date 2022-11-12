@@ -10,12 +10,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TermUserDTO {
 
+    private int id;
     private int userID;
     private int termID;
 
     public static TermUserDTO convertToDto(TermUser termUser){
         TermUserDTO dto = new TermUserDTO();
 
+        dto.setId(termUser.getId());
         dto.setUserID(termUser.getUser().getId());
         dto.setTermID(termUser.getTerm().getId());
 
@@ -25,6 +27,7 @@ public class TermUserDTO {
     public static TermUser convertBack(TermUserDTO dto){
         TermUser termUser = new TermUser();
 
+        termUser.setId(dto.getId());
         termUser.setUser(null);
         termUser.setTerm(null);
 

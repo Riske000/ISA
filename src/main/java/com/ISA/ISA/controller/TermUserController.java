@@ -6,12 +6,14 @@ import com.ISA.ISA.service.TermUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("api/loads")
+@RequestMapping("api/termuser")
 public class TermUserController {
 
     @Autowired
@@ -39,22 +41,22 @@ public class TermUserController {
         return new ResponseEntity<>(termUser, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "{/id}")
+    @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> delete(@PathVariable int id){
         termUserService.delete(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(path = "{/id}")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<?> findById(@PathVariable int id){
-        TermUser termUser = termUserService.findById(id);
+        Optional<TermUser> termUser = termUserService.findById(id);
 
-        if(termUser == null){
+        if(termUser.isEmpty()){
             return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(termUser, HttpStatus.OK);
+        return new ResponseEntity<>(termUser.get(), HttpStatus.OK);
     }
 
     @GetMapping
