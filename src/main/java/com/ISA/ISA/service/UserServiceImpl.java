@@ -5,6 +5,7 @@ import com.ISA.ISA.domain.DTO.UserDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
 import com.ISA.ISA.domain.User;
+import com.ISA.ISA.domain.enums.UserType;
 import com.ISA.ISA.repository.MedicalCenterRepository;
 import com.ISA.ISA.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User registrate(RegistrationDTO registrationDTO){
         User user = RegistrationDTO.convertBack(registrationDTO);
-
+        user.setUserType(UserType.RegisteredUser);
         user = userRepository.save(user);
         return user;
     }

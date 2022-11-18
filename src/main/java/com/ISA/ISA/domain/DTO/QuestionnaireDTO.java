@@ -62,8 +62,6 @@ public class QuestionnaireDTO {
         Questionnaire questionnaire = new Questionnaire();
 
         questionnaire.setId(dto.getId());
-        questionnaire.setUser(null);
-        questionnaire.setDate(dto.getDate());
         questionnaire.setQuestion1(dto.isQuestion1());
         questionnaire.setQuestion2(dto.isQuestion2());
         questionnaire.setQuestion3(dto.isQuestion3());

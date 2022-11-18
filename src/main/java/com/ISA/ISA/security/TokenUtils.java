@@ -3,6 +3,7 @@ package com.ISA.ISA.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Encoders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ public class TokenUtils {
     @Value("APP")
     private String APP_NAME;
 
-    @Value("secret")
+    @Value("5B43E507D0762852D06EEDD2E30A24F10C9572AC114D60D6BB592A15BC505B8E5B43E507D0762852D06EEDD2E30A24F10C9572AC114D60D6BB592A15BC505B8E")
     public String SECRET;
 
     @Value("3600000")

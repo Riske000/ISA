@@ -2,7 +2,9 @@ package com.ISA.ISA.controller;
 
 
 import com.ISA.ISA.domain.DTO.MedicalCenterDTO;
+import com.ISA.ISA.domain.DTO.SortDTO;
 import com.ISA.ISA.domain.MedicalCenter;
+import com.ISA.ISA.domain.enums.SortMode;
 import com.ISA.ISA.service.MedicalCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +22,7 @@ public class MedicalCenterController {
     @Autowired
     private MedicalCenterService medicalCenterService;
 
-    @PostMapping
+    @PostMapping(path = "/create")
     public ResponseEntity<?> add(@RequestBody MedicalCenterDTO medicalCenterDTO){
         MedicalCenter medicalCenter = medicalCenterService.add(medicalCenterDTO);
 
@@ -60,7 +62,7 @@ public class MedicalCenterController {
         return new ResponseEntity<>(medicalCenter.get(), HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping(value = "/getAll")
     public ResponseEntity<?> getAll(){
         List<MedicalCenter> medicalCenters = medicalCenterService.getAll();
 
@@ -69,5 +71,16 @@ public class MedicalCenterController {
         }
 
         return new ResponseEntity<>(medicalCenters, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/getAllSorted")
+    public ResponseEntity<?> getAllSorted(@RequestBody SortDTO sortDTO){
+        List<MedicalCenter> medicalCenters = medicalCenterService.getSorted(sortDTO.getField(), sortDTO.getSortMode());
+
+        if(medicalCenters == null){
+            return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+        }
+
+        return  new ResponseEntity<>(medicalCenters,HttpStatus.OK);
     }
 }

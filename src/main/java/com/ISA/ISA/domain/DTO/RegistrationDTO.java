@@ -23,7 +23,6 @@ public class RegistrationDTO {
     private Gender gender;
     private String profession;
     private String jobDescription;
-    private UserType userType;
     private int medicalCenterID;
 
     public static RegistrationDTO convertToDto(User user)
@@ -42,7 +41,6 @@ public class RegistrationDTO {
         dto.setGender(user.getGender());
         dto.setProfession(user.getProfession());
         dto.setJobDescription(user.getJobDescription());
-        dto.setUserType(user.getUserType());
         dto.setMedicalCenterID(user.getMedicalCenter().getId());
 
         return dto;
@@ -64,7 +62,6 @@ public class RegistrationDTO {
         user.setGender(dto.getGender());
         user.setProfession(dto.getProfession());
         user.setJobDescription(dto.getJobDescription());
-        user.setUserType(dto.getUserType());
         user.setMedicalCenter(null); // menjaj kada budes imao u repo
 
         return user;

@@ -1,8 +1,6 @@
 package com.ISA.ISA.service;
 
 import com.ISA.ISA.domain.DTO.QuestionnaireDTO;
-import com.ISA.ISA.domain.DTO.UserDTO;
-import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Questionnaire;
 import com.ISA.ISA.domain.User;
 import com.ISA.ISA.repository.QuestionnaireRepository;
@@ -10,9 +8,6 @@ import com.ISA.ISA.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +24,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService{
     @Override
     public Questionnaire add(QuestionnaireDTO questionnaireDTO){
         Questionnaire questionnaire =  QuestionnaireDTO.convertBack(questionnaireDTO);
-
+        questionnaire.setUser(userRepository.findById(questionnaireDTO.getUserId()).get());
+        questionnaire.setDate(new Date());
         questionnaire = questionnaireRepository.save(questionnaire);
         return questionnaire;
     }

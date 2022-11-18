@@ -43,12 +43,12 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO){
 
         User user = userService.findUserByEmail(loginDTO.getEmail());
-
-        if(user == null || !passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+        String encripted = passwordEncoder.encode(user.getPassword());
+        if(user == null || !passwordEncoder.matches(loginDTO.getPassword(),encripted)) {
             return ResponseEntity.ok(HttpStatus.UNAUTHORIZED);
         }
 
-        String token = tokenUtils.generateToken(user.getEmail(), user.getUserType().toString());
+        String token = tokenUtils.generateToken(user.getEmail(), user.getRole());
         LoginResponseDTO responseDTO = new LoginResponseDTO();
         responseDTO.setToken(token);
         return ResponseEntity.ok(responseDTO);

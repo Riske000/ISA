@@ -52,8 +52,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
-                .authorizeRequests().antMatchers("/api/users/register").permitAll()
-
+                .authorizeRequests().antMatchers("/api/user/register").permitAll()
+                .and().authorizeRequests().antMatchers("/api/medical/create").permitAll()
+                .and().authorizeRequests().antMatchers(  "api/medical/getAll").permitAll()
                 .anyRequest().authenticated().and()
 
                 .formLogin().loginPage("/login").permitAll().and()
@@ -70,8 +71,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(HttpMethod.POST, "/api/users/login", "/api/users/register");
-        web.ignoring().antMatchers(HttpMethod.GET, "/");
+        web.ignoring().antMatchers(HttpMethod.POST, "/api/user/login", "/api/user/registration", "/api/medical/create");
+        web.ignoring().antMatchers(HttpMethod.GET, "/", "api/medical/getAll");
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
     }
 }

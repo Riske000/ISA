@@ -4,6 +4,7 @@ import com.ISA.ISA.domain.DTO.MedicalCenterDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
 import com.ISA.ISA.domain.User;
+import com.ISA.ISA.domain.enums.SortMode;
 import com.ISA.ISA.repository.MedicalCenterRepository;
 import com.ISA.ISA.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,31 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
     @Override
     public List<MedicalCenter> getAll(){
         return medicalCenterRepository.findAll();
+    }
+    @Override
+    public List<MedicalCenter> getSorted(String field, SortMode sortMode){
+        List<MedicalCenter> medicalCenters = medicalCenterRepository.findAll();
+        switch (field) {
+            case "Name":
+                if (sortMode.equals(SortMode.Ascending)) {
+                    return medicalCenterRepository.findAllByOrderByCenterNameAsc();
+                } else {
+                    return medicalCenterRepository.findAllByOrderByCenterNameDesc();
+                }
+            case "Adress":
+                if (sortMode.equals(SortMode.Ascending)) {
+                    return medicalCenterRepository.findAllByOrderByAdressAsc();
+                } else {
+                    return medicalCenterRepository.findAllByOrderByAdressDesc();
+                }
+            case "Rating":
+                if (sortMode.equals(SortMode.Ascending)){
+                    return medicalCenterRepository.findAllByOrderByAverageRatingAsc();
+                } else {
+                    return medicalCenterRepository.findAllByOrderByAverageRatingDesc();
+                }
+            default:
+                return medicalCenterRepository.findAll();
+        }
     }
 }
