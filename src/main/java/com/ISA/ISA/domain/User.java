@@ -32,6 +32,7 @@ public class User extends Entity{
     private MedicalCenter medicalCenter;
     private boolean confirmed = false;
     private String tokenForConfirmation;
+    int penalties = 0;
 
 
     public String getRole(){

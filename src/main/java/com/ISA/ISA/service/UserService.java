@@ -12,7 +12,7 @@ public interface UserService {
 
     User add(UserDTO userDTO);
     User registrate(RegistrationDTO registrationDTO);
-    User edit(UserDTO userDTO);
+    User edit(int userId, int penalties);
     void delete(int id);
     Optional<User> findById(int id);
     List<User> getAll();

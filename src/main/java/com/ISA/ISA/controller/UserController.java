@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +43,12 @@ public class UserController {
 
     @PostMapping(path = "/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO){
-
+        LocalDate today = LocalDate.now();
+        LocalDate firstDayOfCurrentMonth = LocalDate.now().withDayOfMonth(1);
         User user = userService.findUserByEmail(loginDTO.getEmail());
+        if (user != null && firstDayOfCurrentMonth.equals(today)) {
+            userService.edit(user.getId(), 0);
+        }
         String encripted = passwordEncoder.encode(user.getPassword());
         if(user == null || !passwordEncoder.matches(loginDTO.getPassword(),encripted)) {
             return ResponseEntity.ok(HttpStatus.UNAUTHORIZED);
@@ -68,13 +74,7 @@ public class UserController {
     }
     @PutMapping
     public ResponseEntity<?> edit(@RequestBody UserDTO userDTO){
-        User user = userService.edit(userDTO);
-
-        if(user == null){
-            return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return null;
     }
 
 

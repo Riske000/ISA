@@ -64,28 +64,13 @@ public class UserServiceImpl implements UserService {
         return false;
     }
     @Override
-    public User edit(UserDTO userDTO){
-        Optional<User> user = userRepository.findById(userDTO.getId());
+    public User edit(int userId ,int penalties){
+        Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()){
             return null;
         }
 
-        user.get().setEmail(userDTO.getEmail());
-        user.get().setName(userDTO.getName());
-        user.get().setSurname(userDTO.getSurname());
-        user.get().setAddress(userDTO.getAddress());
-        user.get().setCity(userDTO.getCity());
-        user.get().setCountry(userDTO.getCountry());
-        user.get().setMobilePhone(userDTO.getMobilePhone());
-        user.get().setJmbg(userDTO.getJmbg());
-        user.get().setGender(userDTO.getGender());
-        user.get().setProfession(userDTO.getProfession());
-        user.get().setJobDescription(userDTO.getJobDescription());
-        user.get().setUserType(userDTO.getUserType());
-        Optional<MedicalCenter> medicalCenter = medicalCenterRepository.findById(userDTO.getMedicalCenterID());
-        if(medicalCenter.isPresent()){
-            user.get().setMedicalCenter(medicalCenter.get());
-        }
+        user.get().setPenalties(penalties);
 
         return userRepository.save(user.get());
     }

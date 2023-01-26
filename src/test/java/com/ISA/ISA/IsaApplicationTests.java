@@ -30,7 +30,7 @@ public class IsaApplicationTests {
 			@Override
 			public void run() {
 				System.out.println("Startovan Thread 1");
-				termService.reserveTerm(19, 15); // izvrsavanje transakcione metode traje oko 200 milisekundi
+				termService.reserveTerm(19, 3); // izvrsavanje transakcione metode traje oko 200 milisekundi
 
 			}
 		});
@@ -47,7 +47,7 @@ public class IsaApplicationTests {
 				 * [pool-1-thread-2] o.h.engine.jdbc.spi.SqlExceptionHelper : ERROR: could not obtain lock on row in relation "product"
 				 * Prema Postgres dokumentaciji https://www.postgresql.org/docs/9.3/errcodes-appendix.html, kod 55P03 oznacava lock_not_available
 				 */
-				termService.reserveTerm(19, 3);			}
+				termService.reserveTerm(19, 15);			}
 		});
 		try {
 			future2.get(); // podize ExecutionException za bilo koji izuzetak iz drugog child threada

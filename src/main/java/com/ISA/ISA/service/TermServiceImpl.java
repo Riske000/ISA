@@ -119,6 +119,10 @@ public class TermServiceImpl implements TermService{
 
         String qrCode;
         Date date = new Date();
+        if(user.get().getPenalties() == 3){
+            return null;
+        }
+
         if(!bloodGivingService.CanUserGiveBlood(userId)){
             return null;
         }
