@@ -71,6 +71,16 @@ public class QuestionnaireController {
         return new ResponseEntity<>(questionnaires, HttpStatus.OK);
     }
 
+    @GetMapping(path = "/getLastForUser/{id}")
+    public ResponseEntity<?> getLastForUser(@PathVariable int id){
+        Questionnaire questionnaire = questionnaireService.getLastForUser(id);
 
+        if (questionnaire.getUser() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(questionnaire, HttpStatus.OK);
+
+    }
 
 }

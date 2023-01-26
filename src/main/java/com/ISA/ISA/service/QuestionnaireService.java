@@ -4,6 +4,7 @@ import com.ISA.ISA.domain.DTO.MedicalCenterDTO;
 import com.ISA.ISA.domain.DTO.QuestionnaireDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Questionnaire;
+import com.ISA.ISA.domain.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,4 +16,5 @@ public interface QuestionnaireService {
     void delete(int id);
     Optional<Questionnaire> findById(int id);
     List<Questionnaire> getAll();
+    Questionnaire getLastForUser(int userId);
 }

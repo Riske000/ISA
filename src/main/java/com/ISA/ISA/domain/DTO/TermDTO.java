@@ -39,7 +39,7 @@ public class TermDTO {
         term.setDateOfTerm(dto.getDateOfTerm());
         term.setDuration(dto.getDuration());
         term.setStatusOfTerm(dto.getStatusOfTerm());
-        term.setMedicalCenter(null);
+        //term.setMedicalCenter(null);
         term.setUser(null);
         return term;
     }

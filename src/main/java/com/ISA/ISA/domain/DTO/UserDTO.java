@@ -66,7 +66,6 @@ public class UserDTO {
         user.setProfession(dto.getProfession());
         user.setJobDescription(dto.getJobDescription());
         user.setUserType(dto.getUserType());
-        user.setMedicalCenter(null);
 
         return user;
     }

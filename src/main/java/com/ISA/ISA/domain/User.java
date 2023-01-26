@@ -30,6 +30,8 @@ public class User extends Entity{
     private UserType userType;
     @ManyToOne
     private MedicalCenter medicalCenter;
+    private boolean confirmed = false;
+    private String tokenForConfirmation;
 
 
     public String getRole(){

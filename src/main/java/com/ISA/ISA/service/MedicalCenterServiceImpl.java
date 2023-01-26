@@ -8,8 +8,13 @@ import com.ISA.ISA.domain.enums.SortMode;
 import com.ISA.ISA.repository.MedicalCenterRepository;
 import com.ISA.ISA.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -61,30 +66,23 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
     public List<MedicalCenter> getAll(){
         return medicalCenterRepository.findAll();
     }
+
     @Override
-    public List<MedicalCenter> getSorted(String field, SortMode sortMode){
-        List<MedicalCenter> medicalCenters = medicalCenterRepository.findAll();
-        switch (field) {
-            case "Name":
-                if (sortMode.equals(SortMode.Ascending)) {
-                    return medicalCenterRepository.findAllByOrderByCenterNameAsc();
-                } else {
-                    return medicalCenterRepository.findAllByOrderByCenterNameDesc();
-                }
-            case "Adress":
-                if (sortMode.equals(SortMode.Ascending)) {
-                    return medicalCenterRepository.findAllByOrderByAdressAsc();
-                } else {
-                    return medicalCenterRepository.findAllByOrderByAdressDesc();
-                }
-            case "Rating":
-                if (sortMode.equals(SortMode.Ascending)){
-                    return medicalCenterRepository.findAllByOrderByAverageRatingAsc();
-                } else {
-                    return medicalCenterRepository.findAllByOrderByAverageRatingDesc();
-                }
-            default:
-                return medicalCenterRepository.findAll();
+    public Page<MedicalCenter> getSorted(String field, int pageNo, int pageSize, String sortMode){
+        Pageable paging;
+        String s = "";
+
+        if(sortMode.equals("Ascending")) {
+            paging = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.ASC, field));
+        } else {
+            paging = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.DESC, field));
         }
+
+        return medicalCenterRepository.findAll(paging);
     }
+
+    public int getNumberOfCenters(){
+        return getAll().size();
+    }
+
 }

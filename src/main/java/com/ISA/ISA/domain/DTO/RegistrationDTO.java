@@ -2,11 +2,9 @@ package com.ISA.ISA.domain.DTO;
 
 import com.ISA.ISA.domain.enums.Gender;
 import com.ISA.ISA.domain.User;
-import com.ISA.ISA.domain.enums.UserType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,11 +17,8 @@ public class RegistrationDTO {
     private String city;
     private String country;
     private String mobilePhone;
-    private int jmbg;
-    private Gender gender;
-    private String profession;
-    private String jobDescription;
-    private int medicalCenterID;
+    private String jmbg;
+    private String gender;
 
     public static RegistrationDTO convertToDto(User user)
     {
@@ -37,11 +32,9 @@ public class RegistrationDTO {
         dto.setCity(user.getCity());
         dto.setCity(user.getCity());
         dto.setMobilePhone(user.getMobilePhone());
-        dto.setJmbg(user.getJmbg());
-        dto.setGender(user.getGender());
-        dto.setProfession(user.getProfession());
-        dto.setJobDescription(user.getJobDescription());
-        dto.setMedicalCenterID(user.getMedicalCenter().getId());
+        //dto.setJmbg(user.getJmbg());
+        //dto.setGender(user.getGender());
+
 
         return dto;
     }
@@ -58,11 +51,8 @@ public class RegistrationDTO {
         user.setCity(dto.getCity());
         user.setCountry(dto.getCountry());
         user.setMobilePhone(dto.getMobilePhone());
-        user.setJmbg(dto.getJmbg());
-        user.setGender(dto.getGender());
-        user.setProfession(dto.getProfession());
-        user.setJobDescription(dto.getJobDescription());
-        user.setMedicalCenter(null); // menjaj kada budes imao u repo
+        user.setJmbg(Integer.parseInt(dto.getJmbg()));
+        user.setGender(Gender.valueOf(dto.getGender()));
 
         return user;
     }

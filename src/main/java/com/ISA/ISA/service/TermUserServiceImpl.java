@@ -24,8 +24,8 @@ public class TermUserServiceImpl implements TermUserService{
     @Override
     public TermUser add(TermUserDTO termUserDTO){
         TermUser termUser = new TermUser();
-        termUser.setUser(userRepository.getReferenceById(termUserDTO.getUserID()));
-        termUser.setTerm(termRepository.getReferenceById(termUserDTO.getTermID()));
+        termUser.setUser(userRepository.findById(termUserDTO.getUserID()).get());
+        termUser.setTerm(termRepository.findById(termUserDTO.getTermID()).get());
 
         termUser = termUserRepository.save(termUser);
 
@@ -34,21 +34,23 @@ public class TermUserServiceImpl implements TermUserService{
 
     @Override
     public TermUser edit(TermUserDTO termUserDTO){
-        Optional<TermUser> termUser = termUserRepository.findById(termUserDTO.getId());
-        if (termUser.isEmpty()){
+        Optional<User> user = userRepository.findById(termUserDTO.getUserID());
+        Optional<Term> term = termRepository.findById(termUserDTO.getTermID());
+
+        if (user.isEmpty() || term.isEmpty()){
             return null;
         }
 
-        Optional<User> user = userRepository.findById(termUserDTO.getUserID());
-        Optional<Term> term = termRepository.findById(termUserDTO.getTermID());
+        TermUser termUser = termUserRepository.findByTermAndAndUser(term.get(), user.get());
+
         if(user.isPresent()){
-            termUser.get().setUser(user.get());
+            termUser.setUser(user.get());
         }
         if (term.isPresent()){
-            termUser.get().setTerm(term.get());
+            termUser.setTerm(term.get());
         }
 
-        return termUserRepository.save(termUser.get());
+        return termUserRepository.save(termUser);
     }
 
     @Override

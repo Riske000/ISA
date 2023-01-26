@@ -17,5 +17,8 @@ public interface UserService {
     Optional<User> findById(int id);
     List<User> getAll();
     User findUserByEmail(String email);
+    boolean isEmailTaken(String email);
+    User getCurrentUser(String email);
+    boolean confirmMail(String email, String confirmToken);
 
 }

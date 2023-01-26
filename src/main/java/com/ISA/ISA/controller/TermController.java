@@ -1,5 +1,6 @@
 package com.ISA.ISA.controller;
 
+import com.ISA.ISA.domain.DTO.ReserveTermDTO;
 import com.ISA.ISA.domain.DTO.TermDTO;
 import com.ISA.ISA.domain.Term;
 import com.ISA.ISA.service.TermService;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +63,49 @@ public class TermController {
     @GetMapping
     public ResponseEntity<?> getAll(){
         List<Term> terms = termService.getAll();
+
+        if(terms == null){
+            return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(terms, HttpStatus.OK);
+    }
+
+    @GetMapping("/getTermsForCenter/{medId}")
+    public ResponseEntity<?> getAllForSelectedCenter(@PathVariable int medId){
+        List<Term> terms = termService.getAllForSelectedCenter(medId);
+        if(terms == null){
+            return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(terms, HttpStatus.OK);
+    }
+
+    @PostMapping("/reserveTerm/")
+    public ResponseEntity<?> reserveTerm(@RequestBody ReserveTermDTO reserveTermDTO){
+        Term term = termService.reserveTerm(Integer.parseInt(reserveTermDTO.getTermId()),
+                Integer.parseInt( reserveTermDTO.getUserId()));
+        if(term == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(term, HttpStatus.OK);
+    }
+
+    @PostMapping("/cancelTerm/")
+    public ResponseEntity<?> cancelTerm(@RequestBody ReserveTermDTO reserveTermDTO){
+        Term term = termService.cancelTerm(Integer.parseInt(reserveTermDTO.getTermId()),
+                Integer.parseInt( reserveTermDTO.getUserId()));
+        if(term == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(term, HttpStatus.OK);
+    }
+
+    @GetMapping("/getReservedTermForUser/{userId}")
+    public ResponseEntity<?> getReservedTermForUser(@PathVariable int userId){
+        List<Term> terms = termService.getReservedTermForUser(userId);
 
         if(terms == null){
             return ResponseEntity.ok(HttpStatus.BAD_REQUEST);

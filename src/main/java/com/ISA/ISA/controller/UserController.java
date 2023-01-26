@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-
+@CrossOrigin(origins = "http://localhost:3000/", allowedHeaders = "Authorization")
 @RestController
 @RequestMapping("api/user")
 public class UserController {
@@ -46,6 +46,9 @@ public class UserController {
         String encripted = passwordEncoder.encode(user.getPassword());
         if(user == null || !passwordEncoder.matches(loginDTO.getPassword(),encripted)) {
             return ResponseEntity.ok(HttpStatus.UNAUTHORIZED);
+        }
+        if (!user.isConfirmed()){
+            return  ResponseEntity.ok(HttpStatus.BAD_REQUEST);
         }
 
         String token = tokenUtils.generateToken(user.getEmail(), user.getRole());
@@ -104,4 +107,14 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @GetMapping(path = "/getCurrentUser/{email}")
+    public ResponseEntity<?> getCurrentUser(@PathVariable String email){
+        User user = userService.getCurrentUser(email);
+
+        if(user == null){
+            return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }

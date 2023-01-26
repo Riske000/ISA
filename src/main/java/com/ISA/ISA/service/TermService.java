@@ -14,4 +14,8 @@ public interface TermService {
     void delete(int id);
     Optional<Term> findById(int id);
     List<Term> getAll();
+    List<Term >getAllForSelectedCenter(int medicalCenterId);
+    Term reserveTerm(int termId, int userId);
+    Term cancelTerm(int termId, int userId);
+    List<Term> getReservedTermForUser(int userId);
 }

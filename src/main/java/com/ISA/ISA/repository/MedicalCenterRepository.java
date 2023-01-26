@@ -1,7 +1,8 @@
 package com.ISA.ISA.repository;
 
 import com.ISA.ISA.domain.MedicalCenter;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +16,7 @@ public interface MedicalCenterRepository extends JpaRepository<MedicalCenter, In
     List<MedicalCenter> findAllByOrderByAdressDesc();
     List<MedicalCenter> findAllByOrderByAverageRatingAsc();
     List<MedicalCenter> findAllByOrderByAverageRatingDesc();
+
+    Page<MedicalCenter> findAll(Pageable pageable);
 
 }

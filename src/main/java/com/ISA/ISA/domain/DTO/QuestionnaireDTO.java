@@ -14,9 +14,7 @@ import java.util.Date;
 
 public class QuestionnaireDTO {
 
-    private int id;
     public int userId;
-    public Date date;
     public boolean question1;
     public boolean question2;
     public boolean question3;
@@ -36,9 +34,7 @@ public class QuestionnaireDTO {
     public static QuestionnaireDTO convertToDto(Questionnaire questionnaire) {
         QuestionnaireDTO dto = new QuestionnaireDTO();
 
-        dto.setId(questionnaire.getId());
         dto.setUserId(questionnaire.getUser().getId());
-        dto.setDate(questionnaire.getDate());
         dto.setQuestion1(questionnaire.isQuestion1());
         dto.setQuestion2(questionnaire.isQuestion2());
         dto.setQuestion3(questionnaire.isQuestion3());
@@ -61,7 +57,6 @@ public class QuestionnaireDTO {
     public static Questionnaire convertBack(QuestionnaireDTO dto) {
         Questionnaire questionnaire = new Questionnaire();
 
-        questionnaire.setId(dto.getId());
         questionnaire.setQuestion1(dto.isQuestion1());
         questionnaire.setQuestion2(dto.isQuestion2());
         questionnaire.setQuestion3(dto.isQuestion3());
