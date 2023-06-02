@@ -113,4 +113,11 @@ public class TermController {
 
         return new ResponseEntity<>(terms, HttpStatus.OK);
     }
+
+    @GetMapping("/free")
+    public ResponseEntity<?> getAllFreeTerms() {
+
+        return new ResponseEntity<>(termService.getAllFreeTerms(), HttpStatus.OK);
+
+    }
 }

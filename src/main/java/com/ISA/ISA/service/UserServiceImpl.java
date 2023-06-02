@@ -3,15 +3,11 @@ package com.ISA.ISA.service;
 import com.ISA.ISA.domain.DTO.RegistrationDTO;
 import com.ISA.ISA.domain.DTO.UserDTO;
 import com.ISA.ISA.domain.EmailDetails;
-import com.ISA.ISA.domain.MedicalCenter;
-import com.ISA.ISA.domain.Term;
 import com.ISA.ISA.domain.User;
 import com.ISA.ISA.domain.enums.UserType;
 import com.ISA.ISA.repository.MedicalCenterRepository;
 import com.ISA.ISA.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -75,6 +71,25 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user.get());
     }
 
+    @Override
+    public User updateUser(UserDTO updatedUserDTO) {
+        User existingUser = userRepository.findById(updatedUserDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Ažurirajte polja korisnika na osnovu podataka iz UserDTO objekta
+        existingUser.setName(updatedUserDTO.getName());
+        existingUser.setSurname(updatedUserDTO.getSurname());
+        existingUser.setAddress(updatedUserDTO.getAddress());
+        existingUser.setCity(updatedUserDTO.getCity());
+        existingUser.setCountry(updatedUserDTO.getCountry());
+        existingUser.setMobilePhone(updatedUserDTO.getMobilePhone());
+        existingUser.setJmbg(updatedUserDTO.getJmbg());
+        existingUser.setGender(updatedUserDTO.getGender());
+        existingUser.setProfession(updatedUserDTO.getProfession());
+        existingUser.setJobDescription(updatedUserDTO.getJobDescription());
+
+        return userRepository.save(existingUser);
+    }
 
     @Override
     public void delete(int id) {
@@ -131,6 +146,17 @@ public class UserServiceImpl implements UserService {
         }
 
         return false;
+    }
+
+    @Override
+    public void updateLoyaltyCategory(User user) {
+        if (user.getLoyaltyPoints() >= 0 && user.getLoyaltyPoints() <= 100) {
+            user.setLoyaltyCategory("Silver");
+        } else if (user.getLoyaltyPoints() >= 101 && user.getLoyaltyPoints() <= 500) {
+            user.setLoyaltyCategory("Gold");
+        } else if (user.getLoyaltyPoints() >= 501) {
+            user.setLoyaltyCategory("Platinum");
+        }
     }
 
 }

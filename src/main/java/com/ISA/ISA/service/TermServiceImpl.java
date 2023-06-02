@@ -7,16 +7,10 @@ import com.ISA.ISA.repository.MedicalCenterRepository;
 import com.ISA.ISA.repository.QuestionnaireRepository;
 import com.ISA.ISA.repository.TermRepository;
 import com.ISA.ISA.repository.UserRepository;
-import net.glxn.qrgen.QRCode;
-import net.glxn.qrgen.image.ImageType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 
 import javax.transaction.Transactional;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -199,6 +193,11 @@ public class TermServiceImpl implements TermService{
             }
         }
         return termsToShow;
+    }
+
+    @Override
+    public List<Term> getAllFreeTerms() {
+        return termRepository.findByStatusOfTerm(StatusOfTerm.Free);
     }
 
 }

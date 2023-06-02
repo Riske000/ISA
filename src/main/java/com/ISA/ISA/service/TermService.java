@@ -18,4 +18,6 @@ public interface TermService {
     Term reserveTerm(int termId, int userId);
     Term cancelTerm(int termId, int userId);
     List<Term> getReservedTermForUser(int userId);
+
+    List<Term> getAllFreeTerms();
 }

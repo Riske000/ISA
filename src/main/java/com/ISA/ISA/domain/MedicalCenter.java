@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.ManyToOne;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -17,4 +18,7 @@ public class MedicalCenter extends Entity{
     private String adress;
     private String description;
     private double averageRating;
+    private LocalTime startTime;
+    private LocalTime endTime;
+
 }

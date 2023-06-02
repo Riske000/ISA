@@ -4,6 +4,10 @@ import com.ISA.ISA.domain.MedicalCenter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.bytebuddy.asm.Advice;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -16,6 +20,9 @@ public class MedicalCenterDTO {
     private String address;
     private String description;
     private double averageRating;
+    private LocalTime startTime;
+    private LocalTime endTime;
+
 
     public static MedicalCenterDTO convertToDTO(MedicalCenter medicalCenter){
         MedicalCenterDTO dto = new MedicalCenterDTO();
@@ -25,6 +32,7 @@ public class MedicalCenterDTO {
         dto.setAddress(medicalCenter.getAdress());
         dto.setDescription(medicalCenter.getDescription());
         dto.setAverageRating(medicalCenter.getAverageRating());
+
 
         return dto;
     }
@@ -40,4 +48,5 @@ public class MedicalCenterDTO {
 
         return medicalCenter;
     }
+
 }

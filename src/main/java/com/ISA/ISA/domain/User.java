@@ -34,6 +34,9 @@ public class User extends Entity{
     private String tokenForConfirmation;
     int penalties = 0;
 
+    private int loyaltyPoints;
+    private String loyaltyCategory;
+
 
     public String getRole(){
         return userType.toString();

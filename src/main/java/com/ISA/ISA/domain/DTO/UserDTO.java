@@ -27,6 +27,9 @@ public class UserDTO {
     private UserType userType;
     private int medicalCenterID;
 
+    private int loyaltyPoints;
+    private String loyaltyCategory;
+
     public static UserDTO convertToDto(User user)
     {
         UserDTO dto = new UserDTO();
@@ -37,17 +40,22 @@ public class UserDTO {
         dto.setSurname(user.getSurname());
         dto.setAddress(user.getAddress());
         dto.setCity(user.getCity());
-        dto.setCity(user.getCity());
+        dto.setCountry(user.getCountry());
         dto.setMobilePhone(user.getMobilePhone());
         dto.setJmbg(user.getJmbg());
         dto.setGender(user.getGender());
         dto.setProfession(user.getProfession());
         dto.setJobDescription(user.getJobDescription());
         dto.setUserType(user.getUserType());
-        dto.setMedicalCenterID(user.getMedicalCenter().getId());
+        dto.setLoyaltyPoints(user.getLoyaltyPoints());
+        dto.setLoyaltyCategory(user.getLoyaltyCategory());
+        if (user.getMedicalCenter() != null) {
+            dto.setMedicalCenterID(user.getMedicalCenter().getId());
+        }
 
         return dto;
     }
+
 
     public static User convertBack(UserDTO dto)
     {
@@ -66,6 +74,8 @@ public class UserDTO {
         user.setProfession(dto.getProfession());
         user.setJobDescription(dto.getJobDescription());
         user.setUserType(dto.getUserType());
+        user.setLoyaltyPoints(dto.getLoyaltyPoints());
+        user.setLoyaltyCategory(dto.getLoyaltyCategory());
 
         return user;
     }

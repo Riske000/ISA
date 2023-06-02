@@ -77,6 +77,21 @@ public class UserController {
         return null;
     }
 
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UserDTO updatedUserDTO) {
+        User updatedUser = UserDTO.convertBack(updatedUserDTO);
+        updatedUser.setId(Math.toIntExact(userId));
+
+        User updated = userService.updateUser(UserDTO.convertToDto(updatedUser));
+        if (updated == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        userService.updateLoyaltyCategory(updated);
+
+        return ResponseEntity.ok(updated);
+    }
+
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<?> delete(@PathVariable int id){

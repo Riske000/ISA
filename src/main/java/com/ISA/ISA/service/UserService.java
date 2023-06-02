@@ -13,6 +13,9 @@ public interface UserService {
     User add(UserDTO userDTO);
     User registrate(RegistrationDTO registrationDTO);
     User edit(int userId, int penalties);
+
+    User updateUser(UserDTO updatedUserDTO);
+
     void delete(int id);
     Optional<User> findById(int id);
     List<User> getAll();
@@ -21,4 +24,5 @@ public interface UserService {
     User getCurrentUser(String email);
     boolean confirmMail(String email, String confirmToken);
 
+    void updateLoyaltyCategory(User user);
 }
