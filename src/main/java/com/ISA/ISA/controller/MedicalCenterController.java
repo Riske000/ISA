@@ -116,5 +116,38 @@ public class MedicalCenterController {
         return ResponseEntity.ok(updatedMedicalCenter);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<MedicalCenter>> searchMedicalCenters(
+            @RequestParam(required = false) String centerName,
+            @RequestParam(required = false) String adress
+    ) {
+        List<MedicalCenter> medicalCenters;
+        if (centerName != null && adress != null) {
+            medicalCenters = medicalCenterService.searchMedicalCentersByCenterNameAndAdressIgnoreCase(centerName, adress);
+        } else if (centerName != null) {
+            medicalCenters = medicalCenterService.searchMedicalCentersByCenterNameIgnoreCase(centerName);
+        } else if (adress != null) {
+            medicalCenters = medicalCenterService.searchMedicalCentersByAdressIgnoreCase(adress);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(medicalCenters);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<MedicalCenter>> filterMedicalCentersByRating(
+            @RequestParam(required = false) Double minRating
+    ) {
+        List<MedicalCenter> filteredCenters;
+        if (minRating != null) {
+            filteredCenters = medicalCenterService.filterMedicalCentersByRating(minRating);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(filteredCenters);
+    }
+
 
 }

@@ -88,6 +88,9 @@ public class UserServiceImpl implements UserService {
         existingUser.setProfession(updatedUserDTO.getProfession());
         existingUser.setJobDescription(updatedUserDTO.getJobDescription());
 
+        updateLoyaltyCategory(existingUser);
+
+
         return userRepository.save(existingUser);
     }
 

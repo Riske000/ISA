@@ -24,4 +24,13 @@ public interface MedicalCenterService {
     List<Term> getFreeTermsByMedicalCenterId(Integer medicalCenterId);
 
     MedicalCenterDTO updateWorkingHours(int id, LocalTime startTime, LocalTime endTime);
+
+
+    List<MedicalCenter> searchMedicalCentersByCenterNameAndAdressIgnoreCase(String centerName, String adress);
+
+    List<MedicalCenter> searchMedicalCentersByCenterNameIgnoreCase(String centerName);
+
+    List<MedicalCenter> searchMedicalCentersByAdressIgnoreCase(String adress);
+
+    List<MedicalCenter> filterMedicalCentersByRating(Double minRating);
 }

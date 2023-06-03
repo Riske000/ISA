@@ -19,4 +19,11 @@ public interface MedicalCenterRepository extends JpaRepository<MedicalCenter, In
 
     Page<MedicalCenter> findAll(Pageable pageable);
 
+    List<MedicalCenter> findByCenterNameContainingIgnoreCase(String centerName);
+
+    List<MedicalCenter> findByCenterNameContainingIgnoreCaseAndAdressContainingIgnoreCase(String centerName, String address);
+
+    List<MedicalCenter> findByAdressContainingIgnoreCase(String adress);
+
+    List<MedicalCenter> findByAverageRatingGreaterThanEqual(Double minRating);
 }

@@ -114,6 +114,26 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
         return updatedMedicalCenterDTO;
     }
 
+    @Override
+    public List<MedicalCenter> searchMedicalCentersByCenterNameAndAdressIgnoreCase(String centerName, String adress) {
+        return medicalCenterRepository.findByCenterNameContainingIgnoreCaseAndAdressContainingIgnoreCase(centerName, adress);
+    }
+
+    @Override
+    public List<MedicalCenter> searchMedicalCentersByCenterNameIgnoreCase(String centerName) {
+        return medicalCenterRepository.findByCenterNameContainingIgnoreCase(centerName);
+    }
+
+    @Override
+    public List<MedicalCenter> searchMedicalCentersByAdressIgnoreCase(String adress) {
+        return medicalCenterRepository.findByAdressContainingIgnoreCase(adress);
+    }
+
+    @Override
+    public List<MedicalCenter> filterMedicalCentersByRating(Double minRating) {
+        return medicalCenterRepository.findByAverageRatingGreaterThanEqual(minRating);
+    }
+
 
 
 }
