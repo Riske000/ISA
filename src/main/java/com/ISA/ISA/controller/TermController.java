@@ -2,14 +2,17 @@ package com.ISA.ISA.controller;
 
 import com.ISA.ISA.domain.DTO.ReserveTermDTO;
 import com.ISA.ISA.domain.DTO.TermDTO;
+import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
 import com.ISA.ISA.service.TermService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Optional;
@@ -119,5 +122,11 @@ public class TermController {
 
         return new ResponseEntity<>(termService.getAllFreeTerms(), HttpStatus.OK);
 
+    }
+
+    @GetMapping("/medical-centers")
+    public List<MedicalCenter> searchMedicalCentersByDateTime(@RequestParam("dateTime") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String dateTimeStr) {
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr);
+        return termService.searchMedicalCentersByDateTime(dateTime);
     }
 }

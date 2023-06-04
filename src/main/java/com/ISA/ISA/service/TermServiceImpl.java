@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -200,4 +202,20 @@ public class TermServiceImpl implements TermService{
         return termRepository.findByStatusOfTerm(StatusOfTerm.Free);
     }
 
+    @Override
+    public List<MedicalCenter> searchMedicalCentersByDateTime(LocalDateTime dateTime) {
+        Date date = Date.from(dateTime.toInstant(ZoneOffset.UTC));
+
+        List<Term> terms = termRepository.findByDateOfTerm(date);
+        List<MedicalCenter> medicalCenters = new ArrayList<>();
+
+        for (Term term : terms) {
+            if (term.getStatusOfTerm() == StatusOfTerm.Free) {
+                MedicalCenter medicalCenter = term.getMedicalCenter();
+                medicalCenters.add(medicalCenter);
+            }
+        }
+
+        return medicalCenters;
+    }
 }

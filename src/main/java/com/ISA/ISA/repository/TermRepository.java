@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.LockModeType;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,4 +30,6 @@ public interface TermRepository extends JpaRepository<Term, Integer> {
 
 
     List<Term> findByMedicalCenterIdAndStatusOfTerm(Integer medicalCenterId, StatusOfTerm statusOfTerm);
+
+    List<Term> findByDateOfTerm(Date dateTime);
 }
