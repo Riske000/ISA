@@ -67,6 +67,7 @@ public class MedicalCenterController {
         return new ResponseEntity<>(medicalCenter.get(), HttpStatus.OK);
     }
 
+    @CrossOrigin
     @GetMapping(value = "/getAll")
     public ResponseEntity<?> getAll(){
         List<MedicalCenter> medicalCenters = medicalCenterService.getAll();

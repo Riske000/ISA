@@ -49,24 +49,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception{
         http
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
-
-                .authorizeRequests().antMatchers("/api/user/register").permitAll()
-                .and().authorizeRequests().antMatchers(  "api/medical/getAll").permitAll()
+                .authorizeRequests()
+                .antMatchers("/api/user/register").permitAll()
+                .antMatchers("/api/medical/getAll").permitAll()
                 .anyRequest().authenticated().and()
-
                 .formLogin().loginPage("/login").permitAll().and()
-
                 .logout().permitAll().and()
-
                 .cors().and()
-
                 .httpBasic().and()
-
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
+
         http.csrf().disable();
     }
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {
