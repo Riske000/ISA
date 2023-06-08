@@ -76,7 +76,10 @@ public class UserServiceImpl implements UserService {
         User existingUser = userRepository.findById(updatedUserDTO.getId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // Ažurirajte polja korisnika na osnovu podataka iz UserDTO objekta
+        if (!updatedUserDTO.getEmail().equals(existingUser.getEmail())) {
+            throw new IllegalArgumentException("Changing email is not allowed.");
+        }
+
         existingUser.setName(updatedUserDTO.getName());
         existingUser.setSurname(updatedUserDTO.getSurname());
         existingUser.setAddress(updatedUserDTO.getAddress());

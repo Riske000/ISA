@@ -11,12 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.*;
+import java.util.*;
 
 @Service
 public class TermServiceImpl implements TermService{
@@ -33,6 +29,9 @@ public class TermServiceImpl implements TermService{
     @Autowired
     private BloodGivingService bloodGivingService;
 
+    @Autowired
+    private QuestionnaireService questionnaireService;
+
     @Override
     public Term add(TermDTO termDTO){
         Term term = TermDTO.convertBack(termDTO);
@@ -41,9 +40,24 @@ public class TermServiceImpl implements TermService{
             term.setUser(null);
         }
         term.setMedicalCenter(medicalCenter.get());
+        Date termDate = term.getDateOfTerm();
+        Date currentDate = new Date();
+        if (termDate.before(currentDate)) {
+            throw new IllegalArgumentException("Date of term must be in future.");
+        }
+
+        LocalTime termTime = LocalTime.of(termDate.getHours(), termDate.getMinutes());
+        LocalTime startTime = medicalCenter.get().getStartTime();
+        LocalTime endTime = medicalCenter.get().getEndTime();
+
+        if (termTime.isBefore(startTime) || termTime.isAfter(endTime)) {
+            throw new IllegalArgumentException("Term time must be within the working hours of the medical center.");
+        }
+
         term = termRepository.save(term);
         return term;
     }
+
     @Transactional
     @Override
     public Term edit(TermDTO termDTO){
@@ -203,19 +217,59 @@ public class TermServiceImpl implements TermService{
     }
 
     @Override
-    public List<MedicalCenter> searchMedicalCentersByDateTime(LocalDateTime dateTime) {
+    public List<Map<String, Object>> searchMedicalCentersByDateTime(LocalDateTime dateTime) {
         Date date = Date.from(dateTime.toInstant(ZoneOffset.UTC));
 
         List<Term> terms = termRepository.findByDateOfTerm(date);
-        List<MedicalCenter> medicalCenters = new ArrayList<>();
+        List<Map<String, Object>> medicalCentersList = new ArrayList<>();
 
         for (Term term : terms) {
             if (term.getStatusOfTerm() == StatusOfTerm.Free) {
                 MedicalCenter medicalCenter = term.getMedicalCenter();
-                medicalCenters.add(medicalCenter);
+                int termId = term.getId();
+
+                Map<String, Object> medicalCenterMap = new HashMap<>();
+                medicalCenterMap.put("medicalCenter", medicalCenter);
+                medicalCenterMap.put("termId", termId);
+
+                medicalCentersList.add(medicalCenterMap);
             }
         }
 
-        return medicalCenters;
+        return medicalCentersList;
     }
+
+    @Override
+    public Long getTermIdByMedicalCenterAndDateTime(Integer medicalCenterId, LocalDateTime dateTime) {
+        Date date = Date.from(dateTime.toInstant(ZoneOffset.UTC));
+        Term term = termRepository.findByMedicalCenterIdAndDateOfTerm(medicalCenterId, date);
+        if (term != null) {
+            return (long) term.getId();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void reserveTerm(Integer termId, Integer userId) {
+        Optional<Term> termOptional = termRepository.findById(termId);
+        if (termOptional.isPresent()) {
+            Term term = termOptional.get();
+            User user = new User();
+            user.setId(userId);
+            term.setUser(user);
+            term.setStatusOfTerm(StatusOfTerm.Taken);
+
+            Questionnaire lastQuestionnaire = questionnaireService.getLastForUser(userId);
+            if (lastQuestionnaire == null) {
+                throw new IllegalArgumentException("User must fill out the questionnaire before reserving a term.");
+            }
+
+            termRepository.save(term);
+        } else {
+            throw new IllegalArgumentException("Term with ID " + termId + " not found");
+        }
+    }
+
+
 }

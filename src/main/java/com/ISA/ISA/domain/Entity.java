@@ -22,4 +22,7 @@ public class Entity {
     )
     private int id;
     private boolean deleted = false;
+
+
 }
+

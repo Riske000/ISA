@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface TermService {
@@ -24,5 +25,11 @@ public interface TermService {
     List<Term> getAllFreeTerms();
 
 
-    List<MedicalCenter> searchMedicalCentersByDateTime(LocalDateTime dateTime);
+    List<Map<String, Object>> searchMedicalCentersByDateTime(LocalDateTime dateTime);
+
+    Long getTermIdByMedicalCenterAndDateTime(Integer medicalCenterId, LocalDateTime dateTime);
+
+    void reserveTerm(Integer termId, Integer userId);
+
+
 }

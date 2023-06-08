@@ -21,7 +21,7 @@ public interface MedicalCenterService {
     Page<MedicalCenter> getSorted(String field, int pageNo, int pageSize, String sortMode);
     int getNumberOfCenters();
 
-    List<Term> getFreeTermsByMedicalCenterId(Integer medicalCenterId);
+    List<Term> getTermsByMedicalCenterId(Integer medicalCenterId);
 
     MedicalCenterDTO updateWorkingHours(int id, LocalTime startTime, LocalTime endTime);
 

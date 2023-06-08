@@ -87,8 +87,8 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
     }
 
     @Override
-    public List<Term> getFreeTermsByMedicalCenterId(Integer medicalCenterId) {
-        return termRepository.findByMedicalCenterIdAndStatusOfTerm(medicalCenterId, StatusOfTerm.Free);
+    public List<Term> getTermsByMedicalCenterId(Integer medicalCenterId) {
+        return termRepository.findByMedicalCenterId(medicalCenterId);
     }
 
 

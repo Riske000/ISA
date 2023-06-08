@@ -4,6 +4,7 @@ import com.ISA.ISA.domain.DTO.ReserveTermDTO;
 import com.ISA.ISA.domain.DTO.TermDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
+import com.ISA.ISA.service.MedicalCenterService;
 import com.ISA.ISA.service.TermService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.temporal.Temporal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 
 @RestController
 @RequestMapping("api/term")
@@ -124,9 +125,35 @@ public class TermController {
 
     }
 
-    @GetMapping("/medical-centers")
-    public List<MedicalCenter> searchMedicalCentersByDateTime(@RequestParam("dateTime") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String dateTimeStr) {
+   @GetMapping("/medical-centers")
+   public ResponseEntity<List<Map<String, Object>>> searchMedicalCentersByDateTime(@RequestParam("dateTime") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String dateTimeStr) {
+       LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr);
+       List<Map<String, Object>> medicalCentersList = termService.searchMedicalCentersByDateTime(dateTime);
+
+       if (medicalCentersList.isEmpty()) {
+           return ResponseEntity.noContent().build();
+       }
+
+       return ResponseEntity.ok(medicalCentersList);
+   }
+
+    @PostMapping("/find-term-id")
+    public ResponseEntity<?> confirmTerm(@RequestParam("medicalCenterId") Integer medicalCenterId, @RequestParam("dateTime") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") String dateTimeStr) {
         LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr);
-        return termService.searchMedicalCentersByDateTime(dateTime);
+
+        Long termId = termService.getTermIdByMedicalCenterAndDateTime(medicalCenterId, dateTime);
+
+        if (termId != null) {
+            return ResponseEntity.ok(termId);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
+    @PostMapping("/reserve")
+    public ResponseEntity<String> reserveTerm(@RequestParam("termId") Integer termId, @RequestParam("userId") Integer userId) {
+        termService.reserveTerm(termId, userId);
+        return ResponseEntity.ok("Term reserved successfully");
+    }
+
 }

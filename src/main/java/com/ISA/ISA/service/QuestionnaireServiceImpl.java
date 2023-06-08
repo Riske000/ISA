@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class QuestionnaireServiceImpl implements QuestionnaireService{
+public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Autowired
     private QuestionnaireRepository questionnaireRepository;
@@ -22,17 +22,22 @@ public class QuestionnaireServiceImpl implements QuestionnaireService{
     private UserRepository userRepository;
 
     @Override
-    public Questionnaire add(QuestionnaireDTO questionnaireDTO){
-        Questionnaire questionnaire =  QuestionnaireDTO.convertBack(questionnaireDTO);
+    public Questionnaire add(QuestionnaireDTO questionnaireDTO) {
+        Questionnaire questionnaire = QuestionnaireDTO.convertBack(questionnaireDTO);
 
         Optional<User> user = userRepository.findById(questionnaireDTO.getUserId());
-        if (user.isEmpty()){
+        if (user.isEmpty()) {
             return null;
         }
         Questionnaire oldQuestionnaire = questionnaireRepository.findOneByUserAndDeleted(user.get(), false);
         if (oldQuestionnaire != null) {
             oldQuestionnaire.setDeleted(true);
         }
+
+        if (questionnaire.isQuestion1()) {
+            return null;
+        }
+
         questionnaire.setUser(user.get());
         questionnaire.setDate(new Date());
 
@@ -41,13 +46,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService{
     }
 
     @Override
-    public Questionnaire edit(QuestionnaireDTO questionnaireDTO){
+    public Questionnaire edit(QuestionnaireDTO questionnaireDTO) {
         Optional<User> user = userRepository.findById(questionnaireDTO.getUserId());
         Questionnaire questionnaire = questionnaireRepository.findOneByUserAndDeleted(user.get(), false);
 
 
-
-        if(user.isPresent()){
+        if (user.isPresent()) {
             questionnaire.setUser(user.get());
         }
         questionnaire.setDate(new Date());
@@ -79,19 +83,19 @@ public class QuestionnaireServiceImpl implements QuestionnaireService{
     }
 
     @Override
-    public Optional<Questionnaire> findById(int id){
+    public Optional<Questionnaire> findById(int id) {
         return questionnaireRepository.findOneByIdAndDeleted(id, false);
     }
 
     @Override
-    public List<Questionnaire> getAll(){
+    public List<Questionnaire> getAll() {
         return questionnaireRepository.findAll();
     }
 
-    public Questionnaire getLastForUser(int userId){
+    public Questionnaire getLastForUser(int userId) {
         Optional<User> user = userRepository.findById(userId);
 
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return new Questionnaire();
         }
 
@@ -99,5 +103,4 @@ public class QuestionnaireServiceImpl implements QuestionnaireService{
 
         return questionnaire;
     }
-
 }

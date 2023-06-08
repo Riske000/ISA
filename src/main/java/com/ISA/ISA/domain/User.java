@@ -41,4 +41,5 @@ public class User extends Entity{
     public String getRole(){
         return userType.toString();
     }
+
 }

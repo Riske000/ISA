@@ -26,10 +26,9 @@ public interface TermRepository extends JpaRepository<Term, Integer> {
     List<Term> findByStatusOfTerm(StatusOfTerm statusOfTerm);
 
 
-    List<Term> findByMedicalCenterId(Integer medicalCenterId);
-
-
-    List<Term> findByMedicalCenterIdAndStatusOfTerm(Integer medicalCenterId, StatusOfTerm statusOfTerm);
-
     List<Term> findByDateOfTerm(Date dateTime);
+
+    Term findByMedicalCenterIdAndDateOfTerm(Integer medicalCenterId, Date date);
+
+    List<Term> findByMedicalCenterId(Integer medicalCenterId);
 }

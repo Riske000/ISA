@@ -100,7 +100,7 @@ public class MedicalCenterController {
 
     @GetMapping("/terms/{medicalCenterId}")
     public ResponseEntity<List<Term>> getFreeTermsByMedicalCenterId(@PathVariable("medicalCenterId") Integer medicalCenterId) {
-        List<Term> terms = medicalCenterService.getFreeTermsByMedicalCenterId(medicalCenterId);
+        List<Term> terms = medicalCenterService.getTermsByMedicalCenterId(medicalCenterId);
         return new ResponseEntity<>(terms, HttpStatus.OK);
     }
 
