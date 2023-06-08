@@ -33,4 +33,6 @@ public interface MedicalCenterService {
     List<MedicalCenter> searchMedicalCentersByAdressIgnoreCase(String adress);
 
     List<MedicalCenter> filterMedicalCentersByRating(Double minRating);
+
+    MedicalCenterDTO updateCenterInfo(int id, String centerName, String address, String description, Double averageRating);
 }
