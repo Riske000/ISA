@@ -1,10 +1,7 @@
 package com.ISA.ISA.controller;
 
 
-import com.ISA.ISA.domain.DTO.LoginDTO;
-import com.ISA.ISA.domain.DTO.LoginResponseDTO;
-import com.ISA.ISA.domain.DTO.RegistrationDTO;
-import com.ISA.ISA.domain.DTO.UserDTO;
+import com.ISA.ISA.domain.DTO.*;
 import com.ISA.ISA.domain.User;
 import com.ISA.ISA.security.TokenUtils;
 import com.ISA.ISA.service.UserService;
@@ -132,4 +129,41 @@ public class UserController {
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    @GetMapping(path = "/administrators/{medicalCenterId}")
+    public ResponseEntity<?> getAllAdministratorsForMedicalCenter(@PathVariable int medicalCenterId) {
+        List<User> administrators = userService.getAllAdministratorsForMedicalCenter(medicalCenterId);
+
+        if (administrators == null) {
+            return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(administrators, HttpStatus.OK);
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) {
+        String email = changePasswordDTO.getEmail();
+        String oldPassword = changePasswordDTO.getOldPassword();
+        String newPassword = changePasswordDTO.getNewPassword();
+
+        User user = userService.findUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        String encripted = passwordEncoder.encode(user.getPassword());
+        if (!passwordEncoder.matches(oldPassword, encripted)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect old password");
+        }
+
+        if (user.isFirstLogin()) {
+            user.setFirstLogin(false);
+        }
+
+        userService.changePassword(email, newPassword);
+
+        return ResponseEntity.ok().build();
+    }
+
+
 }

@@ -25,4 +25,8 @@ public interface UserService {
     boolean confirmMail(String email, String confirmToken);
 
     void updateLoyaltyCategory(User user);
+
+    List<User> getAllAdministratorsForMedicalCenter(int medicalCenterId);
+
+    User changePassword(String email, String newPassword);
 }

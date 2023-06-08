@@ -134,6 +134,36 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
         return medicalCenterRepository.findByAverageRatingGreaterThanEqual(minRating);
     }
 
+    @Override
+    public MedicalCenterDTO updateCenterInfo(int id, String centerName, String address, String description, Double averageRating) {
+        MedicalCenter medicalCenter = medicalCenterRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Medical Center not found"));
+
+        if (centerName != null) {
+            medicalCenter.setCenterName(centerName);
+        }
+
+        if (address != null) {
+            medicalCenter.setAdress(address);
+        }
+
+        if (description != null) {
+            medicalCenter.setDescription(description);
+        }
+
+        if (averageRating != null) {
+            medicalCenter.setAverageRating(averageRating);
+        }
+
+        MedicalCenter updatedMedicalCenter = medicalCenterRepository.save(medicalCenter);
+
+        MedicalCenterDTO updatedMedicalCenterDTO = MedicalCenterDTO.convertToDTO(updatedMedicalCenter);
+        updatedMedicalCenterDTO.setStartTime(updatedMedicalCenter.getStartTime());
+        updatedMedicalCenterDTO.setEndTime(updatedMedicalCenter.getEndTime());
+
+        return updatedMedicalCenterDTO;
+    }
+
 
 
 }

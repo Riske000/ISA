@@ -149,5 +149,19 @@ public class MedicalCenterController {
         return ResponseEntity.ok(filteredCenters);
     }
 
+    @PutMapping("/edit-info/{id}")
+    public ResponseEntity<?> updateCenterInfo(
+            @PathVariable Integer id,
+            @RequestBody MedicalCenterDTO medicalCenterDTO
+    ) {
+        String centerName = medicalCenterDTO.getCenterName();
+        String address = medicalCenterDTO.getAddress();
+        String description = medicalCenterDTO.getDescription();
+        Double averageRating = medicalCenterDTO.getAverageRating();
+
+        MedicalCenterDTO updatedMedicalCenter = medicalCenterService.updateCenterInfo(id, centerName, address, description, averageRating);
+        return ResponseEntity.ok(updatedMedicalCenter);
+    }
+
 
 }

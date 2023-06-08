@@ -33,7 +33,8 @@ public class User extends Entity{
     private boolean confirmed = false;
     private String tokenForConfirmation;
     int penalties = 0;
-
+    private boolean isFirstLogin=true;
+    private boolean passwordChanged=false;
     private int loyaltyPoints;
     private String loyaltyCategory;
 

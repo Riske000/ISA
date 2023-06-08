@@ -3,6 +3,7 @@ package com.ISA.ISA.service;
 import com.ISA.ISA.domain.DTO.RegistrationDTO;
 import com.ISA.ISA.domain.DTO.UserDTO;
 import com.ISA.ISA.domain.EmailDetails;
+import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.User;
 import com.ISA.ISA.domain.enums.UserType;
 import com.ISA.ISA.repository.MedicalCenterRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -160,6 +162,28 @@ public class UserServiceImpl implements UserService {
         } else if (user.getLoyaltyPoints() >= 501) {
             user.setLoyaltyCategory("Platinum");
         }
+    }
+
+    @Override
+    public List<User> getAllAdministratorsForMedicalCenter(int medicalCenterId) {
+        Optional<MedicalCenter> medicalCenter = medicalCenterRepository.findById(medicalCenterId);
+        if (medicalCenter.isPresent()) {
+            return userRepository.findAllByMedicalCenterAndUserType(medicalCenter.get(), UserType.CenterAdministrator);
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public User changePassword(String email, String newPassword) {
+        User user = findUserByEmail(email);
+
+        if (user != null) {
+            user.setPassword(newPassword);
+            user.setPasswordChanged(true);
+            return userRepository.save(user);
+        }
+
+        return null;
     }
 
 }
