@@ -34,4 +34,6 @@ public interface TermService {
 
 
     Boolean hasTermsByUserAndMedicalCenter(User user, MedicalCenter medicalCenter);
+
+    List<Term> getTermsForMedicalCenter(Integer medicalCenterId);
 }

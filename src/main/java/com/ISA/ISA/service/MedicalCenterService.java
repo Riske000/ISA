@@ -3,6 +3,7 @@ package com.ISA.ISA.service;
 import com.ISA.ISA.domain.DTO.MedicalCenterDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
+import com.ISA.ISA.domain.User;
 import com.ISA.ISA.domain.enums.SortMode;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -37,4 +38,6 @@ public interface MedicalCenterService {
     MedicalCenterDTO updateCenterInfo(int id, String centerName, String address, String description, Double averageRating);
 
     double averageRating(Integer medicalCenterId);
+
+    List<User> usersWhoVisited(Integer medicalCenterId);
 }

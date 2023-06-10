@@ -4,6 +4,7 @@ import com.ISA.ISA.domain.DTO.MedicalCenterDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.RateCenter;
 import com.ISA.ISA.domain.Term;
+import com.ISA.ISA.domain.User;
 import com.ISA.ISA.repository.MedicalCenterRepository;
 import com.ISA.ISA.repository.RateCenterRepository;
 import com.ISA.ISA.repository.TermRepository;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.ArrayList;
+
 
 import java.time.LocalTime;
 import java.util.List;
@@ -33,6 +36,9 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
 
     @Autowired
     private RateCenterRepository rateCenterRepository;
+
+    @Autowired
+    private TermService termService;
 
     @Override
     public MedicalCenter add(MedicalCenterDTO medicalCenterDTO){
@@ -194,4 +200,21 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
 
 
     }
+
+    @Override
+    public List<User> usersWhoVisited(Integer medicalCenterId) {
+        List<User> visitedUsers = new ArrayList<>();
+
+        MedicalCenter medicalCenter = medicalCenterRepository.findById(medicalCenterId).get();
+
+        List<User> allUsers = userRepository.findAll();
+        for (User user : allUsers) {
+            if (termService.hasTermsByUserAndMedicalCenter(user, medicalCenter)) {
+                visitedUsers.add(user);
+            }
+        }
+
+        return visitedUsers;
+    }
+
 }

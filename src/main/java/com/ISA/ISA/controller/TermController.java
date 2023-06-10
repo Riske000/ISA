@@ -174,6 +174,11 @@ public class TermController {
         return termService.hasTermsByUserAndMedicalCenter(user.get(), medicalCenter.get());
     }
 
+    @GetMapping("/medical-center/{medicalCenterId}/past-taken-terms")
+    public ResponseEntity<List<Term>> getPastTakenTermsForMedicalCenter(@PathVariable Integer medicalCenterId) {
+        List<Term> terms = termService.getTermsForMedicalCenter(medicalCenterId);
+        return ResponseEntity.ok(terms);
+    }
 
 
 }

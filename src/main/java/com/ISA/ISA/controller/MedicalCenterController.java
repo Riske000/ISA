@@ -4,6 +4,7 @@ package com.ISA.ISA.controller;
 import com.ISA.ISA.domain.DTO.MedicalCenterDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
+import com.ISA.ISA.domain.User;
 import com.ISA.ISA.repository.MedicalCenterRepository;
 import com.ISA.ISA.service.MedicalCenterService;
 import com.ISA.ISA.service.RateCenterService;
@@ -27,6 +28,8 @@ public class MedicalCenterController {
 
     @Autowired
     private MedicalCenterRepository medicalCenterRepository;
+
+
 
 
     @PostMapping(path = "/create")
@@ -170,6 +173,17 @@ public class MedicalCenterController {
     public ResponseEntity<Double> getAverageRating(@PathVariable Integer medicalCenterId) {
         double averageRating = medicalCenterService.averageRating(medicalCenterId);
         return ResponseEntity.ok(averageRating);
+    }
+
+    @GetMapping("/users/visited/{medicalCenterId}")
+    public ResponseEntity<List<User>> getUsersWhoVisited(@PathVariable Integer medicalCenterId) {
+        List<User> visitedUsers = medicalCenterService.usersWhoVisited(medicalCenterId);
+
+        if (visitedUsers.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(visitedUsers);
+        }
     }
 
 

@@ -289,4 +289,24 @@ public class TermServiceImpl implements TermService{
         return false;
     }
 
+    @Override
+    public List<Term> getTermsForMedicalCenter(Integer medicalCenterId) {
+        List<Term> terms = termRepository.findByMedicalCenterIdAndStatusOfTerm(medicalCenterId, StatusOfTerm.Taken);
+        List<Term> filteredTerms = new ArrayList<>();
+
+        for (Term term : terms) {
+            if (term.getStatusOfTerm() == StatusOfTerm.Taken) {
+                LocalDateTime termDateTime = term.getDateOfTerm().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
+                LocalDateTime currentDateTime = LocalDateTime.now();
+
+                if (termDateTime.isBefore(currentDateTime)) {
+                    filteredTerms.add(term);
+                }
+            }
+        }
+
+        return filteredTerms;
+    }
+
+
 }
