@@ -31,4 +31,6 @@ public interface TermRepository extends JpaRepository<Term, Integer> {
     Term findByMedicalCenterIdAndDateOfTerm(Integer medicalCenterId, Date date);
 
     List<Term> findByMedicalCenterId(Integer medicalCenterId);
+
+    List<Term> findByUserAndMedicalCenter(User user, MedicalCenter medicalCenter);
 }

@@ -35,4 +35,6 @@ public interface MedicalCenterService {
     List<MedicalCenter> filterMedicalCentersByRating(Double minRating);
 
     MedicalCenterDTO updateCenterInfo(int id, String centerName, String address, String description, Double averageRating);
+
+    double averageRating(Integer medicalCenterId);
 }

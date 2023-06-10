@@ -4,6 +4,9 @@ import com.ISA.ISA.domain.DTO.ReserveTermDTO;
 import com.ISA.ISA.domain.DTO.TermDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
+import com.ISA.ISA.domain.User;
+import com.ISA.ISA.repository.MedicalCenterRepository;
+import com.ISA.ISA.repository.UserRepository;
 import com.ISA.ISA.service.MedicalCenterService;
 import com.ISA.ISA.service.TermService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,10 @@ import java.util.*;
 public class TermController {
     @Autowired
     private TermService termService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private MedicalCenterRepository medicalCenterRepository;
 
     @PostMapping
     public ResponseEntity<?> add(@RequestBody TermDTO termDTO){
@@ -155,5 +162,18 @@ public class TermController {
         termService.reserveTerm(termId, userId);
         return ResponseEntity.ok("Term reserved successfully");
     }
+
+    @GetMapping("/terms/user/{userId}/medical-center/{medicalCenterId}")
+    public Boolean hasTermsByUserAndMedicalCenter(@PathVariable Integer userId, @PathVariable Integer medicalCenterId) {
+        Optional<User> user = userRepository.findById(userId);
+        Optional<MedicalCenter> medicalCenter = medicalCenterRepository.findById(medicalCenterId);
+        if (user.isEmpty() || medicalCenter.isEmpty()) {
+            return false;
+        }
+
+        return termService.hasTermsByUserAndMedicalCenter(user.get(), medicalCenter.get());
+    }
+
+
 
 }

@@ -6,6 +6,7 @@ import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
 import com.ISA.ISA.repository.MedicalCenterRepository;
 import com.ISA.ISA.service.MedicalCenterService;
+import com.ISA.ISA.service.RateCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class MedicalCenterController {
 
     @Autowired
     private MedicalCenterRepository medicalCenterRepository;
+
 
     @PostMapping(path = "/create")
     public ResponseEntity<?> add(@RequestBody MedicalCenterDTO medicalCenterDTO){
@@ -162,6 +164,12 @@ public class MedicalCenterController {
 
         MedicalCenterDTO updatedMedicalCenter = medicalCenterService.updateCenterInfo(id, centerName, address, description, averageRating);
         return ResponseEntity.ok(updatedMedicalCenter);
+    }
+
+    @GetMapping("/medical-center/{medicalCenterId}/average-rating")
+    public ResponseEntity<Double> getAverageRating(@PathVariable Integer medicalCenterId) {
+        double averageRating = medicalCenterService.averageRating(medicalCenterId);
+        return ResponseEntity.ok(averageRating);
     }
 
 

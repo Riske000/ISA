@@ -2,9 +2,12 @@ package com.ISA.ISA.service;
 
 import com.ISA.ISA.domain.DTO.MedicalCenterDTO;
 import com.ISA.ISA.domain.MedicalCenter;
+import com.ISA.ISA.domain.RateCenter;
 import com.ISA.ISA.domain.Term;
 import com.ISA.ISA.repository.MedicalCenterRepository;
+import com.ISA.ISA.repository.RateCenterRepository;
 import com.ISA.ISA.repository.TermRepository;
+import com.ISA.ISA.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +27,12 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
 
     @Autowired
     private TermRepository termRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RateCenterRepository rateCenterRepository;
 
     @Override
     public MedicalCenter add(MedicalCenterDTO medicalCenterDTO){
@@ -163,7 +172,26 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
         return updatedMedicalCenterDTO;
     }
 
+    @Override
+    public double averageRating(Integer medicalCenterId){
+        MedicalCenter medicalCenter = medicalCenterRepository.findById(medicalCenterId).orElse(null);
+        if (medicalCenter == null) {
+            return 0.0;
+        }
+
+        List<RateCenter> rateCenters = rateCenterRepository.findByMedicalCenter(medicalCenter);
+        if (rateCenters.isEmpty()) {
+            return 0.0;
+        }
+
+        int sum = 0;
+        for (RateCenter rateCenter : rateCenters) {
+            sum += rateCenter.getRating();
+        }
+
+        double averageGrade = (double) sum / rateCenters.size();
+        return averageGrade;
 
 
-
+    }
 }

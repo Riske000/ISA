@@ -1,5 +1,6 @@
 package com.ISA.ISA.domain;
 
+import com.ISA.ISA.service.MedicalCenterService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

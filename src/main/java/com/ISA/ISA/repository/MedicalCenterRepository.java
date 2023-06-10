@@ -1,6 +1,7 @@
 package com.ISA.ISA.repository;
 
 import com.ISA.ISA.domain.MedicalCenter;
+import com.ISA.ISA.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,5 @@ public interface MedicalCenterRepository extends JpaRepository<MedicalCenter, In
     List<MedicalCenter> findByAdressContainingIgnoreCase(String adress);
 
     List<MedicalCenter> findByAverageRatingGreaterThanEqual(Double minRating);
+
 }
