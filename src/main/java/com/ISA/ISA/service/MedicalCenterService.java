@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface MedicalCenterService {
@@ -35,4 +36,7 @@ public interface MedicalCenterService {
     List<MedicalCenter> filterMedicalCentersByRating(Double minRating);
 
     MedicalCenterDTO updateCenterInfo(int id, String centerName, String address, String description, Double averageRating);
+
+    List<MedicalCenter> sortMedicalCenters();
+
 }

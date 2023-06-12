@@ -6,7 +6,9 @@ import com.ISA.ISA.domain.Term;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,12 +26,15 @@ public interface TermService {
 
     List<Term> getAllFreeTerms();
 
-
     List<Map<String, Object>> searchMedicalCentersByDateTime(LocalDateTime dateTime);
 
     Long getTermIdByMedicalCenterAndDateTime(Integer medicalCenterId, LocalDateTime dateTime);
 
     void reserveTerm(Integer termId, Integer userId);
 
+    int getTermCountByMonthForMedicalCenter(YearMonth yearMonth, int medicalCenterId);
 
+    Map<String, Integer> getTermCountsByQuarters(Integer year, int medicalCenterId);
+
+    Map<Integer, Integer> getTermCountsByYears(Integer medicalCenterId);
 }

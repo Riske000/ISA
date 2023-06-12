@@ -46,9 +46,10 @@ public class TermServiceImpl implements TermService{
             throw new IllegalArgumentException("Date of term must be in future.");
         }
 
-        LocalTime termTime = LocalTime.of(termDate.getHours(), termDate.getMinutes());
-        LocalTime startTime = medicalCenter.get().getStartTime();
-        LocalTime endTime = medicalCenter.get().getEndTime();
+        LocalDateTime termDateTime = LocalDateTime.ofInstant(termDate.toInstant(), ZoneId.systemDefault());
+        LocalTime termTime = termDateTime.toLocalTime();
+        LocalTime startTime = medicalCenter.get().getStartTime().plusHours(2);
+        LocalTime endTime = medicalCenter.get().getEndTime().plusHours(2);
 
         if (termTime.isBefore(startTime) || termTime.isAfter(endTime)) {
             throw new IllegalArgumentException("Term time must be within the working hours of the medical center.");
@@ -218,6 +219,11 @@ public class TermServiceImpl implements TermService{
 
     @Override
     public List<Map<String, Object>> searchMedicalCentersByDateTime(LocalDateTime dateTime) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        if (dateTime.isBefore(currentDateTime)) {
+            throw new IllegalArgumentException("Date cannot be in the past.");
+        }
         Date date = Date.from(dateTime.toInstant(ZoneOffset.UTC));
 
         List<Term> terms = termRepository.findByDateOfTerm(date);
@@ -235,6 +241,9 @@ public class TermServiceImpl implements TermService{
                 medicalCentersList.add(medicalCenterMap);
             }
         }
+
+       // medicalCentersList.sort(Comparator.comparing(mc -> ((MedicalCenter) mc.get("medicalCenter")).getAverageRating()));
+
 
         return medicalCentersList;
     }
@@ -255,10 +264,21 @@ public class TermServiceImpl implements TermService{
         Optional<Term> termOptional = termRepository.findById(termId);
         if (termOptional.isPresent()) {
             Term term = termOptional.get();
+
+            if (term.getStatusOfTerm() == StatusOfTerm.Taken) {
+                throw new IllegalArgumentException("Term is already taken.");
+            }
+
             User user = new User();
             user.setId(userId);
             term.setUser(user);
             term.setStatusOfTerm(StatusOfTerm.Taken);
+
+            Date termDate = term.getDateOfTerm();
+            Date currentDate = new Date();
+            if (termDate.before(currentDate)) {
+                throw new IllegalArgumentException("Term date must be in the future.");
+            }
 
             Questionnaire lastQuestionnaire = questionnaireService.getLastForUser(userId);
             if (lastQuestionnaire == null) {
@@ -270,6 +290,108 @@ public class TermServiceImpl implements TermService{
             throw new IllegalArgumentException("Term with ID " + termId + " not found");
         }
     }
+
+    @Override
+    public int getTermCountByMonthForMedicalCenter(YearMonth yearMonth, int medicalCenterId) {
+        YearMonth currentYearMonth = YearMonth.now();
+        int currentDay = LocalDate.now().getDayOfMonth();
+
+        if (yearMonth.isAfter(currentYearMonth)) {
+            return 0;
+        }
+
+        LocalDateTime startOfMonth = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime endOfMonth;
+
+        if (yearMonth.equals(currentYearMonth)) {
+            endOfMonth = LocalDateTime.now();
+        } else {
+            endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+        }
+
+        Date startDate = Date.from(startOfMonth.toInstant(ZoneOffset.UTC));
+        Date endDate = Date.from(endOfMonth.toInstant(ZoneOffset.UTC));
+
+        return termRepository.countByDateOfTermBetweenAndMedicalCenterId(startDate, endDate, medicalCenterId);
+    }
+
+
+    @Override
+    public Map<String, Integer> getTermCountsByQuarters(Integer year, int medicalCenterId) {
+        if (year == null) {
+            year = Year.now().getValue();
+        }
+
+        Map<String, Integer> termCounts = new HashMap<>();
+
+        for (int quarter = 1; quarter <= 4; quarter++) {
+            int startMonth = (quarter - 1) * 3 + 1;
+            int endMonth = quarter * 3;
+
+            YearMonth startYearMonth = YearMonth.of(year, startMonth);
+            YearMonth endYearMonth = YearMonth.of(year, endMonth);
+
+            if (endYearMonth.isAfter(YearMonth.now())) {
+                endYearMonth = YearMonth.now();
+            }
+
+            int termCount = termRepository.countByDateOfTermBetweenAndMedicalCenterId(
+                    getStartOfMonth(startYearMonth), getEndOfMonth(endYearMonth), medicalCenterId);
+
+            String quarterKey = "Q" + quarter;
+            termCounts.put(quarterKey, termCount);
+        }
+
+        return termCounts;
+    }
+
+    private Date getEndOfMonth(YearMonth yearMonth) {
+        LocalDateTime endOfMonth = yearMonth.atEndOfMonth().atTime(23, 59, 59);
+        return Date.from(endOfMonth.toInstant(ZoneOffset.UTC));
+    }
+
+    private Date getStartOfMonth(YearMonth yearMonth) {
+        LocalDateTime startOfMonth = yearMonth.atDay(1).atStartOfDay();
+        return Date.from(startOfMonth.toInstant(ZoneOffset.UTC));
+    }
+
+
+    @Override
+    public Map<Integer, Integer> getTermCountsByYears(Integer medicalCenterId) {
+        Year currentYear = Year.now();
+        int currentYearValue = currentYear.getValue();
+        int previousYearValue = currentYearValue - 1;
+        int twoYearsAgoValue = currentYearValue - 2;
+
+        Map<Integer, Integer> termCounts = new HashMap<>();
+
+        int currentYearTermCount = getTermCountByYear(currentYear, medicalCenterId);
+        termCounts.put(currentYearValue, currentYearTermCount);
+
+        int previousYearTermCount = getTermCountByYear(currentYear.minusYears(1), medicalCenterId);
+        termCounts.put(previousYearValue, previousYearTermCount);
+
+        int twoYearsAgoTermCount = getTermCountByYear(currentYear.minusYears(2), medicalCenterId);
+        termCounts.put(twoYearsAgoValue, twoYearsAgoTermCount);
+
+        return termCounts;
+    }
+
+    private int getTermCountByYear(Year year, int medicalCenterId) {
+        LocalDateTime startOfYear = LocalDateTime.of(year.getValue(), 1, 1, 0, 0);
+        LocalDateTime endOfYear = year.atMonth(YearMonth.now().getMonth()).atEndOfMonth().atTime(23, 59, 59);
+
+        Date startDate = Date.from(startOfYear.toInstant(ZoneOffset.UTC));
+        Date endDate = Date.from(endOfYear.toInstant(ZoneOffset.UTC));
+
+        return termRepository.countByDateOfTermBetweenAndMedicalCenterId(startDate, endDate, medicalCenterId);
+    }
+
+
+
+
+
+
 
 
 }

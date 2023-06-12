@@ -13,7 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
+import java.time.YearMonth;
 import java.time.temporal.Temporal;
 import java.util.*;
 
@@ -155,5 +158,58 @@ public class TermController {
         termService.reserveTerm(termId, userId);
         return ResponseEntity.ok("Term reserved successfully");
     }
+
+    @GetMapping("/counts")
+    public Map<String, Integer> getTermCountsByYear(
+            @RequestParam(required = false) Integer year,
+            @RequestParam int medicalCenterId
+    ) {
+        if (year == null) {
+            year = Year.now().getValue();
+        }
+        Map<String, Integer> termCounts = new HashMap<>();
+
+        for (int month = 1; month <= 12; month++) {
+            YearMonth yearMonth = YearMonth.of(year, month);
+            int termCount = termService.getTermCountByMonthForMedicalCenter(yearMonth, medicalCenterId);
+            String monthKey = yearMonth.getMonth().toString();
+            termCounts.put(monthKey, termCount);
+        }
+
+        return termCounts;
+    }
+
+
+    @GetMapping("/counts/quarters")
+    public ResponseEntity<Map<String, Integer>> getTermCountsByQuarters(
+            @RequestParam(required = false) Integer year,
+            @RequestParam int medicalCenterId
+    ) {
+        if (year == null) {
+            year = Year.now().getValue();
+        }
+
+        Map<String, Integer> termCounts = termService.getTermCountsByQuarters(year, medicalCenterId);
+        return ResponseEntity.ok(termCounts);
+    }
+
+    @GetMapping("/counts/years")
+    public ResponseEntity<Map<Integer, Integer>> getTermCountsByYears(
+            @RequestParam int medicalCenterId
+    ) {
+        Map<Integer, Integer> termCounts = termService.getTermCountsByYears(medicalCenterId);
+        return ResponseEntity.ok(termCounts);
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 }

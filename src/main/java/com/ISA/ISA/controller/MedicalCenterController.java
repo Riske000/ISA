@@ -164,5 +164,21 @@ public class MedicalCenterController {
         return ResponseEntity.ok(updatedMedicalCenter);
     }
 
+    @GetMapping("/sort")
+    public List<MedicalCenter> sortMedicalCenters() {
+        return medicalCenterService.sortMedicalCenters();
+    }
+
+    @GetMapping("/average-rating/{id}")
+    public ResponseEntity<Double> getAverageRating(@PathVariable int id) {
+        Optional<MedicalCenter> medicalCenter = medicalCenterService.findById(id);
+
+        if (medicalCenter == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        double averageRating = medicalCenter.get().getAverageRating();
+        return ResponseEntity.ok(averageRating);
+    }
 
 }
