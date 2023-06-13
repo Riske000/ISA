@@ -1,10 +1,12 @@
 package com.ISA.ISA.controller;
 
 
+import com.ISA.ISA.domain.Blood;
 import com.ISA.ISA.domain.DTO.MedicalCenterDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
 import com.ISA.ISA.domain.User;
+import com.ISA.ISA.repository.BloodRepository;
 import com.ISA.ISA.repository.MedicalCenterRepository;
 import com.ISA.ISA.service.MedicalCenterService;
 import com.ISA.ISA.service.RateCenterService;
@@ -28,6 +30,9 @@ public class MedicalCenterController {
 
     @Autowired
     private MedicalCenterRepository medicalCenterRepository;
+
+    @Autowired
+    private BloodRepository bloodRepository;
 
 
 
@@ -186,5 +191,16 @@ public class MedicalCenterController {
         }
     }
 
+    @GetMapping("/blood/{medicalCenterId}")
+    public ResponseEntity<List<Blood>>  getBloodByMedicalCenter(@PathVariable Integer medicalCenterId) {
+        MedicalCenter medicalCenter = medicalCenterRepository.findById(medicalCenterId).get();
+        List<Blood> bloods = bloodRepository.findByMedicalCenter(medicalCenter);
+
+        if(bloods.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }else {
+            return ResponseEntity.ok(bloods);
+        }
+    }
 
 }

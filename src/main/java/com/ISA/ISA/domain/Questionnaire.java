@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import java.util.Date;
 
 @Getter
@@ -32,4 +33,5 @@ public class Questionnaire extends Entity{
     public boolean question13;
     public boolean question14;
     public boolean question15;
+
 }

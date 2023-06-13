@@ -17,4 +17,5 @@ public interface QuestionnaireRepository extends JpaRepository<Questionnaire, In
 
         Questionnaire findOneByUserAndDeleted(User user, boolean deleted);
 
+    Optional<Questionnaire> findByUserId(Integer userId);
 }

@@ -22,10 +22,13 @@ public class Term extends Entity{
     private Date dateOfTerm;
     private int duration;
     private StatusOfTerm statusOfTerm;
+    private String description;
     @OneToOne
     private MedicalCenter medicalCenter;
     @OneToOne
     private User user;
+    @OneToOne
+    private Questionnaire questionnaire;
 
 
 }

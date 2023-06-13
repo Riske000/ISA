@@ -15,6 +15,8 @@ public interface QuestionnaireService {
     Questionnaire edit(QuestionnaireDTO questionnaireDTO);
     void delete(int id);
     Optional<Questionnaire> findById(int id);
+
+
     List<Questionnaire> getAll();
     Questionnaire getLastForUser(int userId);
 }

@@ -5,6 +5,7 @@ import com.ISA.ISA.domain.DTO.TermDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
 import com.ISA.ISA.domain.User;
+import com.ISA.ISA.domain.enums.BloodType;
 import com.ISA.ISA.repository.MedicalCenterRepository;
 import com.ISA.ISA.repository.UserRepository;
 import com.ISA.ISA.service.MedicalCenterService;
@@ -158,8 +159,9 @@ public class TermController {
     }
 
     @PostMapping("/reserve")
-    public ResponseEntity<String> reserveTerm(@RequestParam("termId") Integer termId, @RequestParam("userId") Integer userId) {
-        termService.reserveTerm(termId, userId);
+    public ResponseEntity<String> reserveTerm(@RequestParam("termId") Integer termId, @RequestParam("userId") Integer userId,
+                                              @RequestParam("questionnaireId") Integer questionnaireId) {
+        termService.reserveTerm(termId, userId, questionnaireId);
         return ResponseEntity.ok("Term reserved successfully");
     }
 
@@ -180,5 +182,38 @@ public class TermController {
         return ResponseEntity.ok(terms);
     }
 
+
+    @GetMapping("/getTerm/{termId}")
+    public ResponseEntity<Term> getTermById(@PathVariable Integer termId) {
+        Term term = termService.getTermById(termId);
+        if (term != null) {
+            return ResponseEntity.ok(term);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/cancel-penalty/{termId}")
+    public ResponseEntity<String> didNotShowUp(@PathVariable Integer termId) {
+        termService.didNotShowUp(termId);
+        return ResponseEntity.ok("Term canceled.");
+    }
+
+    @PutMapping("/cancel-admin/{termId}")
+    public ResponseEntity<String> cancelTermByAdmin(@PathVariable Integer termId) {
+        termService.canceledByAdmin(termId);
+        return ResponseEntity.ok("Term successfully canceled by admin.");
+    }
+
+    @PostMapping("/review")
+    public void adminReview(@RequestParam("termId") Integer termId,
+                            @RequestParam("description") String description,
+                            @RequestParam("needleNo") Integer needleNo,
+                            @RequestParam("cottonWoolNo") Integer cottonWoolNo,
+                            @RequestParam("alcoholNo") Integer alcoholNo,
+                            @RequestParam("bloodType") BloodType bloodType,
+                            @RequestParam("deciliters") double deciliters) {
+        termService.adminReview(termId, description, needleNo, cottonWoolNo, alcoholNo, bloodType, deciliters);
+    }
 
 }

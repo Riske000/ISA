@@ -1,5 +1,6 @@
 package com.ISA.ISA.service;
 
+import com.ISA.ISA.domain.Blood;
 import com.ISA.ISA.domain.DTO.MedicalCenterDTO;
 import com.ISA.ISA.domain.MedicalCenter;
 import com.ISA.ISA.domain.Term;
@@ -40,4 +41,6 @@ public interface MedicalCenterService {
     double averageRating(Integer medicalCenterId);
 
     List<User> usersWhoVisited(Integer medicalCenterId);
+
+    List<Blood> getBloodByMedicalCenter(MedicalCenter medicalCenter);
 }

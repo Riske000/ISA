@@ -2,11 +2,9 @@ package com.ISA.ISA.service;
 
 import com.ISA.ISA.domain.*;
 import com.ISA.ISA.domain.DTO.TermDTO;
+import com.ISA.ISA.domain.enums.BloodType;
 import com.ISA.ISA.domain.enums.StatusOfTerm;
-import com.ISA.ISA.repository.MedicalCenterRepository;
-import com.ISA.ISA.repository.QuestionnaireRepository;
-import com.ISA.ISA.repository.TermRepository;
-import com.ISA.ISA.repository.UserRepository;
+import com.ISA.ISA.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +26,16 @@ public class TermServiceImpl implements TermService{
     private UserRepository userRepository;
     @Autowired
     private BloodGivingService bloodGivingService;
-
     @Autowired
     private QuestionnaireService questionnaireService;
+    @Autowired
+    private SuppliesRepository suppliesRepository;
+    @Autowired
+    private BloodRepository bloodRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
+
+
 
     @Override
     public Term add(TermDTO termDTO){
@@ -251,13 +256,16 @@ public class TermServiceImpl implements TermService{
     }
 
     @Override
-    public void reserveTerm(Integer termId, Integer userId) {
+    public void reserveTerm(Integer termId, Integer userId, Integer questionnaireId) {
         Optional<Term> termOptional = termRepository.findById(termId);
         if (termOptional.isPresent()) {
             Term term = termOptional.get();
             User user = new User();
             user.setId(userId);
             term.setUser(user);
+            Questionnaire questionnaire = new Questionnaire();
+            questionnaire.setId(questionnaireId);
+            term.setQuestionnaire(questionnaire);
             term.setStatusOfTerm(StatusOfTerm.Taken);
 
             Questionnaire lastQuestionnaire = questionnaireService.getLastForUser(userId);
@@ -306,6 +314,102 @@ public class TermServiceImpl implements TermService{
         }
 
         return filteredTerms;
+    }
+
+    @Override
+    public Term getTermById(Integer termId){
+        Optional<Term> optionalTerm = termRepository.findById(termId);
+        return optionalTerm.orElse(null);
+    }
+
+    @Override
+    public void didNotShowUp(Integer termId) {
+        Optional<Term> optionalTerm = termRepository.findById(termId);
+        if (optionalTerm.isPresent()) {
+            Term term = optionalTerm.get();
+            if (term.getStatusOfTerm() == StatusOfTerm.Taken) {
+                Optional<Questionnaire> optionalQuestionnaire = questionnaireRepository.findById(term.getQuestionnaire().getId());
+                if (optionalQuestionnaire.isPresent()) {
+                    Questionnaire questionnaire = optionalQuestionnaire.get();
+                    if (questionnaire.isDeleted() == false) {
+                        questionnaire.setDeleted(true);
+                        User user = term.getUser();
+                        user.setPenalties(user.getPenalties() + 1);
+
+                        userRepository.save(user);
+                        questionnaireRepository.save(questionnaire);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void canceledByAdmin(Integer termId) {
+        Optional<Term> optionalTerm = termRepository.findById(termId);
+
+        if (optionalTerm.isPresent() && optionalTerm.get().getStatusOfTerm() == StatusOfTerm.Taken) {
+            Questionnaire questionnaire = optionalTerm.get().getQuestionnaire();
+            if (questionnaire != null) {
+                if (questionnaire.isQuestion1() || questionnaire.isQuestion2() ||
+                        questionnaire.isQuestion3() || questionnaire.isQuestion4() ||
+                        questionnaire.isQuestion5() || questionnaire.isQuestion6() ||
+                        questionnaire.isQuestion7() || questionnaire.isQuestion8() ||
+                        questionnaire.isQuestion9() || questionnaire.isQuestion10() ||
+                        questionnaire.isQuestion11() || questionnaire.isQuestion12() ||
+                        questionnaire.isQuestion13() || questionnaire.isQuestion14() ||
+                        questionnaire.isQuestion15()) {
+
+                    Term term = optionalTerm.get();
+                    term.setStatusOfTerm(StatusOfTerm.Canceled);
+                    questionnaire.setDeleted(true);
+
+                    termRepository.save(term);
+                    questionnaireRepository.save(questionnaire);
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void adminReview(Integer termId, String description, Integer needleNo, Integer cottonWoolNo, Integer alcoholNo, BloodType bloodType, double deciliters){
+        Optional<Term> optionalTerm = termRepository.findById(termId);
+        Term term = optionalTerm.get();
+        LocalDateTime termDateTime = term.getDateOfTerm().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        if(term != null && term.getStatusOfTerm() == StatusOfTerm.Taken && termDateTime.isBefore(currentDateTime)){
+            term.setStatusOfTerm(StatusOfTerm.Done);
+            term.setDescription(description);
+            Questionnaire questionnaire = term.getQuestionnaire();
+            if(questionnaire != null && !questionnaire.isDeleted()){
+                term.getQuestionnaire().setDeleted(true);
+
+                MedicalCenter medicalCenter = term.getMedicalCenter();
+                if(medicalCenter != null){
+                    Supplies supplies = suppliesRepository.findByMedicalCenter(medicalCenter);
+                    supplies.setNeedle(supplies.getNeedle() - needleNo);
+                    supplies.setCottonWool(supplies.getCottonWool() - cottonWoolNo);
+                    supplies.setAlcohol(supplies.getAlcohol() - alcoholNo);
+                    suppliesRepository.save(supplies);
+
+                    Blood blood = bloodRepository.findByBloodTypeAndMedicalCenter(bloodType, medicalCenter);
+                    blood.setDeciliters(blood.getDeciliters() + deciliters);
+                    bloodRepository.save(blood);
+
+                    Review review = new Review();
+                    review.setTerm(term);
+                    review.setDeciliters(deciliters);
+                    review.setAlcoholNo(alcoholNo);
+                    review.setNeedleNo(needleNo);
+                    review.setCottonWoolNo(cottonWoolNo);
+                    review.setBloodType(bloodType);
+                    reviewRepository.save(review);
+                }
+                questionnaireRepository.save(questionnaire);
+            }
+            termRepository.save(term);
+        }
     }
 
 

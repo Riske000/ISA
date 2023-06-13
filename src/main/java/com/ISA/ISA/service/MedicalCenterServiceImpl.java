@@ -1,14 +1,8 @@
 package com.ISA.ISA.service;
 
+import com.ISA.ISA.domain.*;
 import com.ISA.ISA.domain.DTO.MedicalCenterDTO;
-import com.ISA.ISA.domain.MedicalCenter;
-import com.ISA.ISA.domain.RateCenter;
-import com.ISA.ISA.domain.Term;
-import com.ISA.ISA.domain.User;
-import com.ISA.ISA.repository.MedicalCenterRepository;
-import com.ISA.ISA.repository.RateCenterRepository;
-import com.ISA.ISA.repository.TermRepository;
-import com.ISA.ISA.repository.UserRepository;
+import com.ISA.ISA.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,6 +33,9 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
 
     @Autowired
     private TermService termService;
+
+    @Autowired
+    private BloodRepository bloodRepository;
 
     @Override
     public MedicalCenter add(MedicalCenterDTO medicalCenterDTO){
@@ -215,6 +212,11 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
         }
 
         return visitedUsers;
+    }
+
+    @Override
+    public List<Blood> getBloodByMedicalCenter(MedicalCenter medicalCenter){
+        return bloodRepository.findByMedicalCenter(medicalCenter);
     }
 
 }

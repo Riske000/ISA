@@ -2,5 +2,7 @@ package com.ISA.ISA.domain.enums;
 
 public enum StatusOfTerm {
     Free,
-    Taken
+    Taken,
+    Canceled,
+    Done
 }

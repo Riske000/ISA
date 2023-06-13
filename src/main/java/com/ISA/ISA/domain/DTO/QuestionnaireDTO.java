@@ -15,6 +15,7 @@ import java.util.Date;
 public class QuestionnaireDTO {
 
     public int userId;
+    public int termId;
     public boolean question1;
     public boolean question2;
     public boolean question3;
