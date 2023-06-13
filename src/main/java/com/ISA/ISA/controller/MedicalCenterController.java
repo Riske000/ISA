@@ -203,4 +203,10 @@ public class MedicalCenterController {
         }
     }
 
+    @GetMapping("/{userId}/medical-centers")
+    public ResponseEntity<List<MedicalCenter>> getMedicalCentersForUser(@PathVariable("userId") Integer userId) {
+        List<MedicalCenter> medicalCenters = medicalCenterService.getMedicalCentersForUser(userId);
+        return ResponseEntity.ok(medicalCenters);
+    }
+
 }

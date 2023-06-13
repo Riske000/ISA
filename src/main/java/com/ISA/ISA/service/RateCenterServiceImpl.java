@@ -32,6 +32,10 @@ public class RateCenterServiceImpl implements RateCenterService{
 
     @Override
     public void rateMedicalCenter(Integer userId, Integer medicalCenterId, int rating) {
+        if (rating < 0 || rating > 5) {
+            throw new IllegalArgumentException("Ocena mora biti između 0 i 5.");
+        }
+
         boolean hasVisitedCenter = termService.hasTermsByUserAndMedicalCenter(userRepository.findById(userId).get(), medicalCenterRepository.findById(medicalCenterId).get());
 
         if (!hasVisitedCenter) {
@@ -57,7 +61,7 @@ public class RateCenterServiceImpl implements RateCenterService{
         List<Term> userTerms = termRepository.findByUserAndMedicalCenter(user, medicalCenter);
 
         for (Term term : userTerms) {
-            if (term.getStatusOfTerm() == StatusOfTerm.Free) {
+            if (term.getStatusOfTerm() == StatusOfTerm.Taken || term.getStatusOfTerm() == StatusOfTerm.Done) {
                 LocalDateTime termDateTime = term.getDateOfTerm().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
                 LocalDateTime currentDateTime = LocalDateTime.now();
 
@@ -71,6 +75,9 @@ public class RateCenterServiceImpl implements RateCenterService{
 
     @Override
     public void updateRating(Integer userId, Integer medicalCenterId, int newRating) {
+        if (newRating < 0 || newRating > 5) {
+            throw new IllegalArgumentException("Ocena mora biti između 0 i 5.");
+        }
         RateCenter rateCenter = rateCenterRepository.findByUserAndMedicalCenter(userRepository.findById(userId).get(), medicalCenterRepository.findById(medicalCenterId).get());
 
         if (rateCenter == null) {
@@ -80,6 +87,7 @@ public class RateCenterServiceImpl implements RateCenterService{
 
         rateCenterRepository.save(rateCenter);
     }
+
 
 
 

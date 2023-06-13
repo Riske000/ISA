@@ -37,6 +37,9 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
     @Autowired
     private BloodRepository bloodRepository;
 
+    @Autowired
+    private RateCenterService rateCenterService;
+
     @Override
     public MedicalCenter add(MedicalCenterDTO medicalCenterDTO){
         MedicalCenter medicalCenter = new MedicalCenter();
@@ -219,4 +222,21 @@ public class MedicalCenterServiceImpl implements MedicalCenterService{
         return bloodRepository.findByMedicalCenter(medicalCenter);
     }
 
+    @Override
+    public List<MedicalCenter> getMedicalCentersForUser(Integer userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        List<MedicalCenter> medicalCenters = new ArrayList<>();
+
+        if (user != null) {
+            List<MedicalCenter> allMedicalCenters = medicalCenterRepository.findAll();
+
+            for (MedicalCenter medicalCenter : allMedicalCenters) {
+                if (rateCenterService.hasUserVisitedCenter(user, medicalCenter)) {
+                    medicalCenters.add(medicalCenter);
+                }
+            }
+        }
+
+        return medicalCenters;
+    }
 }

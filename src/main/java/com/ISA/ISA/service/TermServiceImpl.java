@@ -327,6 +327,14 @@ public class TermServiceImpl implements TermService{
         Optional<Term> optionalTerm = termRepository.findById(termId);
         if (optionalTerm.isPresent()) {
             Term term = optionalTerm.get();
+
+            LocalDateTime termDateTime = term.getDateOfTerm().toInstant().atOffset(ZoneOffset.UTC).toLocalDateTime();
+            LocalDateTime currentDateTime = LocalDateTime.now();
+
+            if(termDateTime.isAfter(currentDateTime)){
+                throw new IllegalStateException("Nije moguće ne pojaviti se ako je nesto u buducnosti.");
+            }
+
             if (term.getStatusOfTerm() == StatusOfTerm.Taken) {
                 Optional<Questionnaire> optionalQuestionnaire = questionnaireRepository.findById(term.getQuestionnaire().getId());
                 if (optionalQuestionnaire.isPresent()) {
@@ -361,6 +369,7 @@ public class TermServiceImpl implements TermService{
                         questionnaire.isQuestion15()) {
 
                     Term term = optionalTerm.get();
+
                     term.setStatusOfTerm(StatusOfTerm.Canceled);
                     questionnaire.setDeleted(true);
 

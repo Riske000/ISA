@@ -43,4 +43,6 @@ public interface MedicalCenterService {
     List<User> usersWhoVisited(Integer medicalCenterId);
 
     List<Blood> getBloodByMedicalCenter(MedicalCenter medicalCenter);
+
+    List<MedicalCenter> getMedicalCentersForUser(Integer userId);
 }
