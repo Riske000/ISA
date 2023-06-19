@@ -86,7 +86,17 @@ public class TermServiceImpl implements TermService{
 
     @Override
     public List<Term> getAll(){
-        return termRepository.findAll();
+        List<Term> svi = termRepository.findAll();
+        List<Term> available = new ArrayList<>();
+        Date today = new Date();
+
+        for(Term t : svi){
+            if(t.getStatusOfTerm().equals(StatusOfTerm.Free) && t.getDateOfTerm().after(today)){
+                available.add(t);
+            }
+        }
+
+        return available;
     }
 
     @Override

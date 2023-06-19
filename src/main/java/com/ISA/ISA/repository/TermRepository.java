@@ -19,6 +19,5 @@ public interface TermRepository extends JpaRepository<Term, Integer> {
    List<Term> findAllByUser(User user);
 
    List<Term> findAllByUserAndMedicalCenter(User user, MedicalCenter medicalCenter);
-   @Lock(LockModeType.PESSIMISTIC_WRITE)
    Optional<Term> findById(int termId);
 }

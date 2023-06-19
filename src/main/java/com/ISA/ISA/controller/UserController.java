@@ -8,6 +8,7 @@ import com.ISA.ISA.domain.DTO.UserDTO;
 import com.ISA.ISA.domain.User;
 import com.ISA.ISA.security.TokenUtils;
 import com.ISA.ISA.service.UserService;
+import com.ISA.ISA.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,7 @@ public class UserController {
         }
         String encripted = passwordEncoder.encode(user.getPassword());
         if(user == null || !passwordEncoder.matches(loginDTO.getPassword(),encripted)) {
-            return ResponseEntity.ok(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.ok( HttpStatus.UNAUTHORIZED);
         }
         if (!user.isConfirmed()){
             return  ResponseEntity.ok(HttpStatus.BAD_REQUEST);

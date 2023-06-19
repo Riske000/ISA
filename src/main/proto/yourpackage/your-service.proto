@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package net.devh.boot.grpc.example;
+
+option java_multiple_files = true;
+option java_package = "net.devh.boot.grpc.examples.lib";
+option java_outer_classname = "YourServiceProto";
+
+service YourService {
+  rpc ReserveTerm(ReserveTermRequest) returns (Term);
+}
+
+message ReserveTermRequest {
+  int32 termId = 1;
+  int32 userId = 2;
+}
+
+message Term {
+  // Definirajte polja Term poruke prema vašoj logici
+   int32 id = 1;
+}

@@ -71,9 +71,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.POST, "/api/user/login", "/api/user/registration",
-                "/api/emailConfirm/sendMail");
+                "/api/emailConfirm/sendMail", "/api/news/post");
         web.ignoring().antMatchers(HttpMethod.GET, "/", "api/medical/getAll",
-                "/api/emailConfirm/confirm/{email}/{confirmToken}");
+                "/api/emailConfirm/confirm/{email}/{confirmToken}", "/api/news/getAll/{date}");
         web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
     }
 }

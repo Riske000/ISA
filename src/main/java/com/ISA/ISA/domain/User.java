@@ -35,7 +35,5 @@ public class User extends Entity{
     int penalties = 0;
 
 
-    public String getRole(){
-        return userType.toString();
-    }
+    public String getRole(){ return userType.toString(); }
 }
